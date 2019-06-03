@@ -16,6 +16,9 @@ export default createActions({
                     comment,
                 })
                 .then(api.get('restaurants'))
-                .then(({ data }) => data),
+                .then(({ data }) => {
+                    console.log(data);
+                    return data;
+                }),
     },
 }).restaurants;

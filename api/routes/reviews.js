@@ -3,6 +3,7 @@ const router = express.Router();
 
 const { createReview, replyToReview } = require('../models/reviews');
 const { getOwnerByReview } = require('../models/users');
+const { getRestaurants } = require('../models/restaurants');
 
 const authorize = require('../authorizeRequest');
 
@@ -17,8 +18,9 @@ router.post('', authorize(), (req, res, next) => {
     const { restaurant, rate, date, comment } = req.body;
 
     createReview(req.user.id, restaurant, rate, date, comment)
-        .then(() => {
-            res.json({ message: 'Success!' });
+        .then(getRestaurants)
+        .then(data => {
+            res.json(data);
         })
         .catch(next);
 });
@@ -36,13 +38,13 @@ router.post('/reply', authorize('owner'), (req, res, next) => {
     getOwnerByReview(review)
         .then(data => {
             if (data.id === req.user.id) {
-                return replyToReview(review, reply)
+                return replyToReview(review, reply);
             } else {
                 res.sendStatus(401);
                 throw new Error('Unauthorized');
             }
         })
-        .then(() => {
+        .then(data => {
             res.json({ message: 'Success!' });
         })
         .catch(next);

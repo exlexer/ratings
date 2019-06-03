@@ -8,6 +8,7 @@ import ReviewModal from '../components/ReviewModal';
 
 const Home = props => {
     useEffect(() => {
+        console.log(props);
         if (!props.loggedIn) {
             props.history.replace('signin');
         } else {

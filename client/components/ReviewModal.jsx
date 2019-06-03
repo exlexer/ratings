@@ -5,7 +5,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 
 const schema = yup.object({
-    rating: yup.number().required(),
+    rate: yup.number().required(),
     comment: yup.string().required(),
     date: yup.date().required(),
 });
@@ -61,22 +61,22 @@ const ReviewModal = props => {
                                 <Form.Label>Rating</Form.Label>
                                 <Form.Control
                                     type="number"
-                                    name="rating"
+                                    name="rate"
                                     max={5}
                                     min={0}
-                                    values={values.rating}
+                                    values={values.rate}
                                     onChange={handleChange}
-                                    isValid={touched.rating && !errors.rating}
+                                    isValid={touched.rate && !errors.rate}
                                 />
                                 <Form.Control.Feedback
                                     style={{
-                                        display: touched.rating
+                                        display: touched.rate
                                             ? 'block'
                                             : 'none',
                                     }}
                                     type="invalid"
                                 >
-                                    {errors.rating}
+                                    {errors.rate}
                                 </Form.Control.Feedback>
                             </Form.Group>
                             <Form.Group controlId="formBasicPassword">
