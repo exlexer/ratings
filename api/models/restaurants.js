@@ -2,7 +2,8 @@ const db = require('../lib/db');
 
 module.exports = {
     createRestaurant(name, owner) {
-        return db.query(`
+        return db.query(
+            `
             insert into restaurants (name, owner)
             values ($1, (
                 select id
@@ -10,7 +11,9 @@ module.exports = {
                 where username = $2
             ))
             returning *
-        `, [name, owner]);
+        `,
+            [name, owner],
+        );
     },
     getRestaurants() {
         return db.query(`
@@ -26,7 +29,8 @@ module.exports = {
         `);
     },
     getRestaurantsByOwner(owner) {
-        return db.query(`
+        return db.query(
+            `
             select name,
                 id,
                 (
@@ -37,6 +41,8 @@ module.exports = {
             from restaurants r
             where owner = $1
             order by rating desc
-        `, [owner]);
-    }
+        `,
+            [owner],
+        );
+    },
 };

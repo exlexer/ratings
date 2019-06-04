@@ -1,8 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const { get, getOr } = require('lodash/fp');
+const { get, getOr, filter, map } = require('lodash/fp');
 
-const { createRestaurant, getRestaurants, getRestaurantsByOwner } = require('../models/restaurants');
+const {
+    createRestaurant,
+    getRestaurants,
+    getRestaurantsByOwner,
+} = require('../models/restaurants');
+const {
+    createReview,
+    getReviewsByRestaurants,
+    replyToReview,
+} = require('../models/reviews');
 
 const authorize = require('../authorizeRequest');
 
@@ -16,29 +25,42 @@ router.post('', authorize('owner'), (req, res, next) => {
     const owner = getOr(get(['user', 'username'], req), ['body', 'owner'], req);
 
     createRestaurant(name, owner)
-        .then((data) => {
+        .then(data => {
             res.json(data);
         })
         .catch(next);
-})
+});
 
 /**
- * Get all restaurant
+ * Get all restaurants
  */
 router.get('', authorize(), (req, res, next) => {
     if (req.user.role === 'owner') {
+        let _restaurants;
         getRestaurantsByOwner(req.user.id)
-            .then((data) => {
-                res.json(data);
+            .then(restaurants => {
+                _restaurants = restaurants;
+                return getReviewsByRestaurants(restaurants);
             })
+            .then(data =>
+                res.json(
+                    map(
+                        r => ({
+                            ...r,
+                            reviews: filter(re => re.restaurant === r.id, data),
+                        }),
+                        _restaurants,
+                    ),
+                ),
+            )
             .catch(next);
     } else {
         getRestaurants()
-            .then((data) => {
+            .then(data => {
                 res.json(data);
             })
             .catch(next);
     }
-})
+});
 
 module.exports = router;

@@ -1,9 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const { createReview, replyToReview } = require('../models/reviews');
+const {
+    createReview,
+    getReviewsByRestaurants,
+    replyToReview,
+} = require('../models/reviews');
 const { getOwnerByReview } = require('../models/users');
-const { getRestaurants } = require('../models/restaurants');
+const {
+    getRestaurants,
+    getRestaurantsByOwner,
+} = require('../models/restaurants');
 
 const authorize = require('../authorizeRequest');
 

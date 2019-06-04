@@ -1,23 +1,70 @@
-import React from "react";
-import { Container, Row, Col, Navbar } from "react-bootstrap";
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { map, isEmpty } from 'lodash/fp';
+import actions from '../redux/actions/restaurants';
+
+import { Container, Row, Col, ListGroup, Button } from 'react-bootstrap';
+import ReviewModal from '../components/ReviewModal';
 
 const Home = props => {
-    return [
-        <Navbar bg="light">
-            <Navbar.Brand href="home">Test</Navbar.Brand>
-        </Navbar>,
-        <Container>
-            <Row>
-                <Col>1 of 2</Col>
-                <Col>2 of 2</Col>
-            </Row>
-            <Row>
-                <Col>1 of 3</Col>
-                <Col>2 of 3</Col>
-                <Col>3 of 3</Col>
-            </Row>
-        </Container>
-    ];
+    useEffect(() => {
+        if (!props.loggedIn) {
+            props.history.replace('signin');
+        } else {
+            props.loadRestaurants();
+        }
+    }, [props.loggedIn]);
+
+    const [reviewing, setReviewing] = useState();
+
+    return (
+        <>
+            <Container style={{ marginTop: 20 }}>
+                <ListGroup>
+                    {map(
+                        r => (
+                            <ListGroup.Item key={r.id}>
+                                <Row>
+                                    <Col>
+                                        <div>{r.name}</div>
+                                        <div>
+                                            Rating{' '}
+                                            {parseInt(r.rating || 0).toFixed(1)}
+                                        </div>
+                                    </Col>
+                                    <Col style={{ textAlign: 'right' }}>
+                                        <Button onClick={() => setReviewing(r)}>
+                                            Write Review
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </ListGroup.Item>
+                        ),
+                        props.restaurants,
+                    )}
+                </ListGroup>
+            </Container>
+            <ReviewModal
+                show={!isEmpty(reviewing)}
+                restaurant={reviewing}
+                onSubmit={props.reviewRestaurant}
+                onClose={() => setReviewing()}
+            />
+        </>
+    );
 };
 
-export default Home;
+const mapStateToProps = state => ({
+    loggedIn: state.users.loggedIn,
+    restaurants: state.restaurants || [],
+});
+
+const mapDispatchToProps = {
+    loadRestaurants: actions.load,
+    reviewRestaurant: actions.review,
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(Home);

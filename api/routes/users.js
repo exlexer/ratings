@@ -40,9 +40,8 @@ router.post('/signin', (req, res, next) => {
     const { username, password } = req.body;
 
     getUserByUsername(username)
-        .then(({ password: hashed, salt, id, role: _role }) => {
+        .then(({ password: hashed, salt, id, role }) => {
             if (checkPassword(hashed, salt, password)) {
-                role = _role;
                 token = getAuthToken(username);
                 res.cookie('access_token', token, {
                     maxAge: 900000,

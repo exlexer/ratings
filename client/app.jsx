@@ -1,36 +1,54 @@
+import 'babel-polyfill';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { HashRouter, Route, NavLink } from 'react-router-dom';
-import { Navbar } from 'react-bootstrap';
-
-import 'babel-polyfill';
+import { connect } from 'react-redux';
 
 import { Provider } from 'react-redux';
 
+import { Router } from '@reach/router';
+
 import store from './redux';
 
+import MainView from './views/Main';
 import SignIn from './views/SignIn';
-import Home from './views/Home';
 import Restaurants from './views/Restaurants';
+import Reviews from './views/Reviews';
 
-const App = () => (
+const App = ({ loggedIn, role }) => {
+    if (!loggedIn) {
+        return <SignIn />;
+    }
+
+    let routes;
+
+    if (role === 'user') {
+        routes = [<Restaurants path="/" />];
+    }
+
+    if (role === 'owner') {
+        routes = [<Reviews path="/" />];
+    }
+
+    if (role === 'admin') {
+        routes = [<Restaurants path="restaurants" />];
+    }
+
+    return (
+        <Router>
+            <MainView path="/">{routes}</MainView>
+        </Router>
+    );
+};
+
+const mapStateToProps = ({ users }) => users;
+
+const AppContainer = connect(mapStateToProps)(App);
+
+ReactDOM.render(
     <Provider store={store}>
-        <HashRouter>
-            <Navbar bg="light">
-                <Navbar.Brand>Restaurant Review</Navbar.Brand>
-                <NavLink to="/">Home</NavLink>
-                <NavLink to="/restaurants" style={{ marginLeft: 20 }}>
-                    Example
-                </NavLink>
-            </Navbar>
-            <div>
-                <Route path="/signin" component={SignIn} />
-                <Route path="/home" exact component={Home} />
-                <Route path="/restaurants" component={Restaurants} />
-            </div>
-        </HashRouter>
-    </Provider>
+        <AppContainer />
+    </Provider>,
+    document.getElementById('app'),
 );
-
-ReactDOM.render(<App />, document.getElementById('app'));

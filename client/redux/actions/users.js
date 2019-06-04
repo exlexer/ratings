@@ -10,5 +10,9 @@ export default createActions({
             });
             return data;
         },
+        LOGOUT: async () => {
+            const { data } = await api.post('users/logout');
+            return {};
+        },
     },
 }).users;
