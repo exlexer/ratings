@@ -1,7 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { createUser, getUserByUsername } = require('../models/users');
+const {
+    createUser,
+    getUserByUsername,
+    deleteUser,
+    updateUser,
+} = require('../models/users');
 const { setAuthToken } = require('../models/auth');
 const { hashPassword, checkPassword, getAuthToken } = require('../lib/auth');
 
@@ -14,13 +19,13 @@ const authorize = require('../authorizeRequest');
  * @param {string} role
  */
 router.post('', (req, res, next) => {
-    const { username, password, role } = req.body;
+    const { username, password } = req.body;
 
     const [hashed, salt] = hashPassword(password);
 
     let token;
 
-    createUser(username, hashed, salt, role)
+    createUser(username, hashed, salt, 'user')
         .then(data => {
             token = getAuthToken(username);
             return setAuthToken(token, data.id);
@@ -58,9 +63,35 @@ router.post('/signin', (req, res, next) => {
         .catch(next);
 });
 
-router.get('/logout', authorize(), (req, res) => {
+/**
+ * Logout a user
+ */
+router.get('/logout', (req, res) => {
     res.clearCookie('access_token');
+    res.clearCookie('role');
     res.send();
+});
+
+/**
+ * Deletes a user
+ */
+router.delete('/:id', authorize(), (req, res) => {
+    deleteUser(req.params.id)
+        .then(() => {
+            req.json({ message: 'success' });
+        })
+        .catch(next);
+});
+
+/**
+ * Updates a user
+ */
+router.patch('/:id', authorize(), (req, res) => {
+    updateUser(req.params.id, req.body)
+        .then(() => {
+            req.json({ message: 'success' });
+        })
+        .catch(next);
 });
 
 module.exports = router;

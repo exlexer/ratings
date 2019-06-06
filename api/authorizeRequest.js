@@ -1,20 +1,32 @@
-const { indexOf, pick } = require('lodash/fp');
-
+const { includes, pick } = require('lodash/fp');
 const { getUserByToken } = require('./models/users');
 
-const ROLES = ['user', 'owner', 'admin'];
+/**
+ * Authorize a request
+ * Without parameters, a route will
+ * be scoped to admin, to add any
+ * other scopes, an array of roles
+ * can be passed
+ * @param {array} roles
+ */
+module.exports = (roles = []) => (req, res, next) => {
+    roles = [...roles, 'admin'];
 
-module.exports = (role = 'user') => (req, res, next) => {
     const token = req.cookies.access_token;
 
-    getUserByToken(token).then(user => {
-        roleIndex = indexOf(user.role, ROLES);
-        neededIndex = indexOf(role, ROLES);
+    console.log(req.cookies);
 
-        if (roleIndex >= neededIndex) {
+    if (!token) {
+        return res.sendStatus(401);
+    }
+
+    getUserByToken(token).then(user => {
+        if (includes(user.role, roles)) {
             req.user = pick(['id', 'username', 'role'], user);
             next();
         } else {
+            res.clearCookie('access_token');
+            res.clearCookie('role');
             res.sendStatus(401);
         }
     });

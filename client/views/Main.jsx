@@ -14,11 +14,15 @@ const LINKS = {
 };
 
 const MainView = ({ logout, loggedIn, role, children }) => [
-    <Navbar bg="light">
+    <Navbar bg="light" key="nav">
         <Navbar.Brand>Restaurant Review</Navbar.Brand>
         {map(
             link => (
-                <Button variant="link" onClick={() => navigate(link)}>
+                <Button
+                    key={link}
+                    variant="link"
+                    onClick={() => navigate(link)}
+                >
                     {link}
                 </Button>
             ),
@@ -29,7 +33,7 @@ const MainView = ({ logout, loggedIn, role, children }) => [
             Logout
         </Button>
     </Navbar>,
-    children,
+    <div key="body">{children}</div>,
 ];
 
 const mapStateToProps = state => ({

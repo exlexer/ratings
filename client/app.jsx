@@ -24,15 +24,15 @@ const App = ({ loggedIn, role }) => {
     let routes;
 
     if (role === 'user') {
-        routes = [<Restaurants path="/" />];
+        routes = [<Restaurants key="restaurants-route" path="/" />];
     }
 
     if (role === 'owner') {
-        routes = [<Reviews path="/" />];
+        routes = [<Reviews key="restaurants-route" path="/" />];
     }
 
     if (role === 'admin') {
-        routes = [<Restaurants path="restaurants" />];
+        routes = [<Restaurants key="restaurants-route" path="restaurants" />];
     }
 
     return (

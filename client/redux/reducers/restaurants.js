@@ -9,10 +9,6 @@ const reducer = handleActions(
             ...state,
             ...payload,
         }),
-        [actions.review]: (state, { payload }) => ({
-            ...state,
-            ...payload,
-        }),
     },
     defaultState,
 );
