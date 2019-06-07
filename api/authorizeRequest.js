@@ -14,8 +14,6 @@ module.exports = (roles = []) => (req, res, next) => {
 
     const token = req.cookies.access_token;
 
-    console.log(req.cookies);
-
     if (!token) {
         return res.sendStatus(401);
     }

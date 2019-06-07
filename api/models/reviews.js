@@ -23,18 +23,20 @@ function createReview(user, restaurant, rate, date, comment) {
 }
 
 function replyToReview(review, reply) {
+    console.log(review, reply);
     return db.query(
         `
         update reviews
         set reply = $2
         where id = $1
-        returning *
     `,
         [review, reply],
     );
 }
 
-function getReviewsByRestaurant(restaurant) {
+function getReviewsByRestaurant(restaurant, includeReplied) {
+    const replyFilter = 'and reply is null';
+
     return new Promise((resolve, reject) => {
         Promise.all([
             db.query(
@@ -43,6 +45,7 @@ function getReviewsByRestaurant(restaurant) {
                         (select username from users where id = r.user)
                     from reviews r
                     where restaurant = $1
+                    ${!includeReplied ? replyFilter : ''}
                 `,
                 [restaurant],
             ),
@@ -52,6 +55,7 @@ function getReviewsByRestaurant(restaurant) {
                     (select username from users where id = r.user)
                     from reviews r
                     where restaurant = $1
+                    ${!includeReplied ? replyFilter : ''}
                     order by visit_date desc
                     limit 3
                 `,
@@ -63,6 +67,7 @@ function getReviewsByRestaurant(restaurant) {
                     (select username from users where id = r.user)
                     from reviews r
                     where restaurant = $1
+                    ${!includeReplied ? replyFilter : ''}
                     order by rate desc
                     limit 1
                 `,
@@ -74,6 +79,7 @@ function getReviewsByRestaurant(restaurant) {
                     (select username from users where id = r.user)
                     from reviews r
                     where restaurant = $1
+                    ${!includeReplied ? replyFilter : ''}
                     order by rate asc
                     limit 1
                 `,

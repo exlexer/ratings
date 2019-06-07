@@ -58,7 +58,11 @@ function getOwnerByReview(review) {
         where id = (
             select owner
             from restaurants
-            where id = $1
+            where id = (
+                select restaurant
+                from reviews
+                where id = $1
+            )
         )
     `,
         [review],

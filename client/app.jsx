@@ -2,43 +2,23 @@ import 'babel-polyfill';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
-import { connect } from 'react-redux';
-
-import { Provider } from 'react-redux';
-
-import { Router } from '@reach/router';
+import { Provider, connect } from 'react-redux';
 
 import store from './redux';
-
-import MainView from './views/Main';
+import MainHeader from './views/MainHeader';
 import SignIn from './views/SignIn';
 import Restaurants from './views/Restaurants';
-import Reviews from './views/Reviews';
 
 const App = ({ loggedIn, role }) => {
     if (!loggedIn) {
         return <SignIn />;
     }
 
-    let routes;
-
-    if (role === 'user') {
-        routes = [<Restaurants key="restaurants-route" path="/" />];
-    }
-
-    if (role === 'owner') {
-        routes = [<Reviews key="restaurants-route" path="/" />];
-    }
-
-    if (role === 'admin') {
-        routes = [<Restaurants key="restaurants-route" path="restaurants" />];
-    }
-
     return (
-        <Router>
-            <MainView path="/">{routes}</MainView>
-        </Router>
+        <div>
+            <MainHeader key="header" />
+            {role === 'admin' ? <div>ADMIN</div> : <Restaurants />}
+        </div>
     );
 };
 

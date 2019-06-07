@@ -1,14 +1,9 @@
 import React, { useState } from 'react';
-import style from 'styled-components';
 import { MdStar, MdStarBorder, MdStarHalf } from 'react-icons/md';
 import { isFunction } from 'lodash/fp';
+import { Rating } from './StyledComponents';
 
-const Rating = style.div`
-    color: #ddd;
-    width: fit-content;
-`;
-
-const Stars = React.forwardRef(({ rating, onClick }, ref) => {
+const Stars = React.forwardRef(({ rating, onClick, active }, ref) => {
     const [hoverRating, setHoverRating] = useState();
 
     const stars = [];
@@ -28,6 +23,12 @@ const Stars = React.forwardRef(({ rating, onClick }, ref) => {
         }
     };
 
+    const styles = {};
+
+    if (hoverRating || active) {
+        styles.color = '#007bff';
+    }
+
     for (let i = 1; i <= 5; i++) {
         if (i <= baseRating) {
             stars.push(
@@ -37,6 +38,7 @@ const Stars = React.forwardRef(({ rating, onClick }, ref) => {
                     onClick={_handleClick(i)}
                     onMouseEnter={_handleHoverChange(i)}
                     onMouseLeave={_handleHoverChange()}
+                    style={styles}
                 />,
             );
         } else if (i - 1 === baseRating && hasHalf) {

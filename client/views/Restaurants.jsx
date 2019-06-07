@@ -1,50 +1,74 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
-import { map, isEmpty, isNaN, toNumber } from 'lodash/fp';
+import { map } from 'lodash/fp';
 import actions from '../redux/actions/restaurants';
-
 import { Container } from 'react-bootstrap';
 import Restaurant from '../components/Restaurant';
+import { ColumnContainer } from '../components/StyledComponents';
+
+const mapWithKeys = map.convert({ cap: false });
 
 const Restaurants = props => {
     useEffect(() => {
-        if (!props.loggedIn) {
-            props.history.replace('signin');
-        } else {
-            props.loadRestaurants();
-        }
-    }, [props.loggedIn]);
+        props.loadRestaurants();
+    }, []);
 
     return (
         <Container style={{ marginTop: 20 }}>
-            {map(
-                r => (
-                    <Restaurant
-                        key={r.id}
-                        title={r.name}
-                        rating={toNumber(r.rating) || 0}
-                        actions={[{ title: 'Leave review' }]}
-                        onReview={props.reviewRestaurant}
-                        restaurant={r.id}
-                        reviews={r.lastThree}
-                        highestRating={r.highest}
-                        lowestRating={r.lowest}
-                    />
-                ),
-                props.restaurants,
-            )}
+            {mapWithKeys((r, index) => {
+                const style = {};
+
+                if (index % 2) {
+                    style.background = '#f8f9fa';
+                }
+
+                const restaurantProps = {
+                    key: r.id,
+                    title: r.name,
+                    rating: r.rating,
+                    restaurant: r.id,
+                    reviews: r.reviews,
+                    style,
+                };
+
+                if (props.role === 'user') {
+                    restaurantProps.showRange = true;
+                    restaurantProps.showRecent = true;
+                    restaurantProps.highestRating = r.highest;
+                    restaurantProps.lowestRating = r.lowest;
+                    restaurantProps.recent = r.lastThree;
+                    restaurantProps.onReview = props.reviewRestaurant;
+                    restaurantProps.zeroState = (
+                        <ColumnContainer>
+                            No Reviews to yet, leave one!
+                        </ColumnContainer>
+                    );
+                } else if (props.role === 'owner') {
+                    restaurantProps.showUnreplied = true;
+                    restaurantProps.onReply = props.replyToReview;
+                    restaurantProps.zeroState = (
+                        <ColumnContainer>
+                            No Reviews to reply to right now!
+                        </ColumnContainer>
+                    );
+                }
+
+                return <Restaurant {...restaurantProps} />;
+            }, props.restaurants)}
         </Container>
     );
 };
 
 const mapStateToProps = state => ({
     loggedIn: state.users.loggedIn,
+    role: state.users.role,
     restaurants: state.restaurants || [],
 });
 
 const mapDispatchToProps = {
     loadRestaurants: actions.load,
     reviewRestaurant: actions.review,
+    replyToReview: actions.reply,
 };
 
 export default connect(

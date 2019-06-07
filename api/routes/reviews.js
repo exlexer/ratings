@@ -38,13 +38,14 @@ router.post('', authorize(['user']), (req, res, next) => {
  * @param {date} date
  * @param {string} comment
  */
-router.post('/reply', authorize(['owner']), (req, res, next) => {
-    const { review, reply } = req.body;
+router.post('/:id/reply', authorize(['owner']), (req, res, next) => {
+    const { id } = req.params;
+    const { comment } = req.body;
 
-    getOwnerByReview(review)
+    getOwnerByReview(id)
         .then(data => {
             if (data.id === req.user.id) {
-                return replyToReview(review, reply);
+                return replyToReview(id, comment);
             } else {
                 res.sendStatus(401);
                 throw new Error('Unauthorized');

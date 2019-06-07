@@ -20,5 +20,16 @@ export default createActions({
                     console.log(data);
                     return data;
                 }),
+
+        REPLY: (review, comment) =>
+            api
+                .post(`reviews/${review}/reply`, {
+                    comment,
+                })
+                .then(api.get('restaurants'))
+                .then(({ data }) => {
+                    console.log(data);
+                    return data;
+                }),
     },
 }).restaurants;

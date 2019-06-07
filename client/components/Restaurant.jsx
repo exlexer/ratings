@@ -1,37 +1,26 @@
 import React, { useRef, useState } from 'react';
-import style from 'styled-components';
-import { Overlay, Button, Popover, Modal, Form } from 'react-bootstrap';
+import { Overlay, Popover } from 'react-bootstrap';
 import { map } from 'lodash/fp';
-import { Formik } from 'formik';
-import * as yup from 'yup';
 
 import Review from './Review';
 import Stars from './Stars';
-
-const schema = yup.object({
-    comment: yup.string().required(),
-    date: yup.date().required(),
-});
-
-const Container = style.div`
-    width: 100%;
-    padding: 8px 16px;
-    margin-bottom: 50px;
-    display: flex;
-`;
-
-const ColumnContainer = style.div`
-    flex-grow: 1;
-    flex-basis: 0;
-`;
-
-const Title = style.div`
-    font-weight: 500;
-`;
+import {
+    Container,
+    SmallColumnContainer,
+    ColumnContainer,
+    Title,
+    Link,
+} from './StyledComponents';
+import { ReviewForm } from './Forms';
 
 const Restaurant = props => {
     const [settingRating, setSettingRating] = useState();
     const starsRef = useRef();
+
+    const hasData =
+        (props.showRange && props.highestRating) ||
+        (props.showRecent && props.recent.length) ||
+        (props.showUnreplied && props.reviews.length);
 
     const _handleSetRating = rate => {
         if (settingRating) {
@@ -46,15 +35,55 @@ const Restaurant = props => {
         setSettingRating();
     };
 
-    return (
-        <Container>
+    const _getReviewRange = () =>
+        props.highestRating && (
             <ColumnContainer>
+                <div>Highest Rating</div>
+                <Review {...props.highestRating} />
+                <div>Lowest Rating</div>
+                <Review {...props.lowestRating} />
+            </ColumnContainer>
+        );
+
+    const _getRecentReviews = () =>
+        !!props.recent.length && (
+            <ColumnContainer>
+                Most Recent Reviews
+                {map(
+                    r => (
+                        <Review key={r.id} {...r} />
+                    ),
+                    props.recent,
+                )}
+            </ColumnContainer>
+        );
+
+    const _getUnreplied = () =>
+        !!props.review.length && (
+            <ColumnContainer>
+                Unreplied Reviews
+                {map(
+                    r => (
+                        <Review key={r.id} {...r} onReply={props.onReply} />
+                    ),
+                    props.reviews,
+                )}
+            </ColumnContainer>
+        );
+
+    const _getZeroState = () => !hasData && props.zeroState;
+
+    return (
+        <Container style={props.style}>
+            <SmallColumnContainer>
                 <Title>{props.title}</Title>
                 <Stars
                     ref={starsRef}
                     rating={settingRating || props.rating}
-                    onClick={_handleSetRating}
+                    onClick={props.onReview ? _handleSetRating : null}
+                    active={settingRating}
                 />
+                <Link>View Details</Link>
                 <Overlay
                     show={!!settingRating}
                     target={starsRef.current}
@@ -63,115 +92,17 @@ const Restaurant = props => {
                     containerPadding={20}
                 >
                     <Popover id="popover-contained" title="Leave a review">
-                        <Formik
-                            validationSchema={schema}
+                        <ReviewForm
                             onSubmit={_handleSubmit}
-                        >
-                            {({
-                                handleSubmit,
-                                handleChange,
-                                values,
-                                touched,
-                                isValid,
-                                errors,
-                            }) => (
-                                <Form noValidate onSubmit={handleSubmit}>
-                                    <Modal.Body>
-                                        <Form.Group controlId="username">
-                                            <Form.Label>Comment</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="comment"
-                                                as="textarea"
-                                                rows="3"
-                                                values={values.comment}
-                                                onChange={handleChange}
-                                                isValid={
-                                                    touched.comment &&
-                                                    !errors.comment
-                                                }
-                                            />
-                                            <Form.Control.Feedback
-                                                style={{
-                                                    display: touched.comment
-                                                        ? 'block'
-                                                        : 'none',
-                                                }}
-                                                type="invalid"
-                                            >
-                                                {errors.comment}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-
-                                        <Form.Group controlId="date">
-                                            <Form.Label>
-                                                Date of visit
-                                            </Form.Label>
-                                            <Form.Control
-                                                type="date"
-                                                name="date"
-                                                max={5}
-                                                min={0}
-                                                values={values.date}
-                                                onChange={handleChange}
-                                                isValid={
-                                                    touched.date && !errors.date
-                                                }
-                                            />
-                                            <Form.Control.Feedback
-                                                style={{
-                                                    display: touched.date
-                                                        ? 'block'
-                                                        : 'none',
-                                                }}
-                                                type="invalid"
-                                            >
-                                                {errors.date}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                    </Modal.Body>
-                                    <Modal.Footer>
-                                        <Button
-                                            variant="secondary"
-                                            onClick={() => setSettingRating()}
-                                        >
-                                            Cancel
-                                        </Button>
-                                        <Button
-                                            variant="primary"
-                                            type="submit"
-                                            disabled={!isValid}
-                                        >
-                                            Submit
-                                        </Button>
-                                    </Modal.Footer>
-                                </Form>
-                            )}
-                        </Formik>
+                            onCancel={() => setSettingRating()}
+                        />
                     </Popover>
                 </Overlay>
-            </ColumnContainer>
-            {props.highestRating ? (
-                <ColumnContainer>
-                    <div>Highest Rating</div>
-                    <Review {...props.highestRating} />
-                    <div>Lowest Rating</div>
-                    <Review {...props.lowestRating} />
-                </ColumnContainer>
-            ) : (
-                <ColumnContainer>No Reviews Yet</ColumnContainer>
-            )}
-            {!!props.reviews.length && (
-                <ColumnContainer>
-                    Most Recent Reviews
-                    {map(
-                        r => (
-                            <Review key={r.id} {...r} />
-                        ),
-                        props.reviews,
-                    )}
-                </ColumnContainer>
-            )}
+            </SmallColumnContainer>
+            {_getZeroState()}
+            {props.showRange && _getReviewRange()}
+            {props.showRecent && _getRecentReviews()}
+            {props.showUnreplied && _getUnreplied()}
         </Container>
     );
 };

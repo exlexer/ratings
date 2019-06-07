@@ -35,18 +35,22 @@ router.post('', authorize(['owner']), (req, res, next) =>
  * Get all restaurants
  */
 router.get('', authorize(['user', 'owner']), (req, res, next) => {
-    const getting =
+    const gettingRestaurants =
         req.user.role === 'owner'
             ? getRestaurantsByOwner(req.user.id)
             : getRestaurants();
 
     let _restaurants;
 
-    getting
+    gettingRestaurants
         .then(restaurants => {
             _restaurants = restaurants;
             return Promise.all(
-                map(({ id }) => getReviewsByRestaurant(id), restaurants),
+                map(
+                    ({ id }) =>
+                        getReviewsByRestaurant(id, req.user.role !== 'owner'),
+                    restaurants,
+                ),
             );
         })
         .then(reviews =>
