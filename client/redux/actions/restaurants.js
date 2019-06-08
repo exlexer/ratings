@@ -31,5 +31,7 @@ export default createActions({
                     console.log(data);
                     return data;
                 }),
+        DELETE: restaurant =>
+            api.delete(`restaurants/${restaurant}`).then(() => restaurant),
     },
 }).restaurants;

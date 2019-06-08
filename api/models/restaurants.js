@@ -58,9 +58,9 @@ function getRestaurantsByOwner(owner) {
 function deleteRestaurant(restaurant) {
     return db.query(
         `
-        delete from restaurants
-        where id = $1
-    `,
+                    delete from restaurants
+                    where id = $1
+                `,
         [restaurant],
     );
 }

@@ -10,9 +10,24 @@ export default createActions({
             });
             return data;
         },
+        SIGNUP: async (username, password) => {
+            await api.post('users', {
+                username,
+                password,
+            });
+            const { data } = await api.post('users/signin', {
+                username,
+                password,
+            });
+            return data;
+        },
         LOGOUT: async () => {
-            const { data } = await api.post('users/logout');
+            const { data } = await api.get('users/logout');
             return {};
         },
+        GET: () => api.get('users'),
+        UPDATE: (id, role) =>
+            api.patch(`users/${id}`, { role }).then(() => ({ id, role })),
+        DELETE: user => api.delete(`users/${user}`).then(() => user),
     },
 }).users;

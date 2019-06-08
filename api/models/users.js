@@ -5,6 +5,7 @@ const forEachWithKeys = forEach.convert({ cap: false });
 const FIELDS = ['username', 'role'];
 
 module.exports = {
+    getUsers,
     createUser,
     getUserByUsername,
     getUserByToken,
@@ -12,6 +13,17 @@ module.exports = {
     deleteUser,
     updateUser,
 };
+
+function getUsers() {
+    return db.query(
+        `
+        select username,
+                role,
+                id
+        from users
+    `,
+    );
+}
 
 function createUser(username, password, salt, role = 'user') {
     return db.query(
@@ -94,7 +106,7 @@ function updateUser(user, options) {
 
     const query = `
         update users
-        set ${join(', ', update)}
+        set ${join(', ', updates)}
         where id = $${values.length}`;
 
     return db.query(query, values);

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { toNumber, map } = require('lodash/fp');
+const { isArray, toNumber, map } = require('lodash/fp');
 const mapWithKeys = map.convert({ cap: false });
 
 const {
@@ -21,7 +21,6 @@ const authorize = require('../authorizeRequest');
 /**
  * Add new restaurant
  * @param {string} name
- * @param {string} owner
  */
 router.post('', authorize(['owner']), (req, res, next) =>
     createRestaurant(req.body.name, req.user.id)
@@ -44,12 +43,12 @@ router.get('', authorize(['user', 'owner']), (req, res, next) => {
 
     gettingRestaurants
         .then(restaurants => {
-            _restaurants = restaurants;
+            _restaurants = isArray(restaurants) ? restaurants : [restaurants];
             return Promise.all(
                 map(
                     ({ id }) =>
                         getReviewsByRestaurant(id, req.user.role !== 'owner'),
-                    restaurants,
+                    _restaurants,
                 ),
             );
         })
@@ -73,10 +72,10 @@ router.get('', authorize(['user', 'owner']), (req, res, next) => {
 /**
  * Deletes a restaurant
  */
-router.delete('/:id', authorize(), (req, res) =>
+router.delete('/:id', authorize(), (req, res, next) =>
     deleteRestaurant(req.params.id)
         .then(() => {
-            req.json({ message: 'success' });
+            res.json({ message: 'success' });
         })
         .catch(next),
 );
@@ -84,10 +83,10 @@ router.delete('/:id', authorize(), (req, res) =>
 /**
  * Updates a restaurant
  */
-router.patch('/:id', authorize(), (req, res) =>
+router.patch('/:id', authorize(), (req, res, next) =>
     updateRestaurant(req.params.id, req.body)
         .then(() => {
-            req.json({ message: 'success' });
+            res.json({ message: 'success' });
         })
         .catch(next),
 );

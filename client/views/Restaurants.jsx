@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { map } from 'lodash/fp';
 import actions from '../redux/actions/restaurants';
 import { Container } from 'react-bootstrap';
-import Restaurant from '../components/Restaurant';
+import LineItem from '../components/LineItem';
 import { ColumnContainer } from '../components/StyledComponents';
 
 const mapWithKeys = map.convert({ cap: false });
@@ -53,7 +53,7 @@ const Restaurants = props => {
                     );
                 }
 
-                return <Restaurant {...restaurantProps} />;
+                return <LineItem {...restaurantProps} />;
             }, props.restaurants)}
         </Container>
     );

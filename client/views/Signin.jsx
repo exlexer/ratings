@@ -1,26 +1,19 @@
-import React, { useEffect } from 'react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-
+import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
 
-import { Formik } from 'formik';
-import * as yup from 'yup';
-
-const schema = yup.object({
-    username: yup.string().required(),
-    password: yup.string().required(),
-});
+import { Container, Row, Col, Card } from 'react-bootstrap';
+import { constant } from 'lodash/fp';
+import SigninForm from '../forms/SigninForm';
 
 const Signin = props => {
-    useEffect(() => {
-        if (props.loggedIn) {
-            props.history.push('home');
-        }
-    }, [props.loggedIn]);
+    const [signingUp, setSigningUp] = useState();
 
-    const _handleSubmit = ({ username, password }, form) =>
+    const _handleSignin = ({ username, password }) =>
         props.signin(username, password);
+
+    const _handleSignup = ({ username, password }) =>
+        props.signup(username, password);
 
     return (
         <Container>
@@ -29,78 +22,16 @@ const Signin = props => {
                 <Col>
                     <Card style={{ width: '22rem' }}>
                         <Card.Body>
-                            <Card.Title>Sign In</Card.Title>
-                            <Formik
-                                validationSchema={schema}
-                                onSubmit={_handleSubmit}
-                            >
-                                {({
-                                    handleSubmit,
-                                    handleChange,
-                                    values,
-                                    touched,
-                                    isValid,
-                                    errors,
-                                }) => (
-                                    <Form noValidate onSubmit={handleSubmit}>
-                                        <Form.Group controlId="formBasicUsername">
-                                            <Form.Label>Username</Form.Label>
-                                            <Form.Control
-                                                type="text"
-                                                name="username"
-                                                values={values.username}
-                                                onChange={handleChange}
-                                                isValid={
-                                                    touched.username &&
-                                                    !errors.username
-                                                }
-                                            />
-                                            <Form.Control.Feedback
-                                                style={{
-                                                    display: touched.username
-                                                        ? 'block'
-                                                        : 'none',
-                                                }}
-                                                type="invalid"
-                                            >
-                                                {errors.username}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-
-                                        <Form.Group controlId="formBasicPassword">
-                                            <Form.Label>Password</Form.Label>
-                                            <Form.Control
-                                                type="password"
-                                                name="password"
-                                                values={values.password}
-                                                onChange={handleChange}
-                                                feedback={errors.password}
-                                                isValid={
-                                                    touched.password &&
-                                                    !errors.password
-                                                }
-                                            />
-                                            <Form.Control.Feedback
-                                                style={{
-                                                    display: touched.password
-                                                        ? 'block'
-                                                        : 'none',
-                                                }}
-                                                type="invalid"
-                                            >
-                                                {errors.password}
-                                            </Form.Control.Feedback>
-                                        </Form.Group>
-                                        <Button
-                                            disabled={!isValid}
-                                            variant="primary"
-                                            type="submit"
-                                        >
-                                            Submit
-                                        </Button>
-                                    </Form>
-                                )}
-                            </Formik>
+                            <Card.Title>
+                                {signingUp ? 'Signup' : 'Signin'}
+                            </Card.Title>
+                            <SigninForm
+                                onSubmit={
+                                    signingUp ? _handleSignup : _handleSignin
+                                }
+                                toggleText={signingUp ? 'Signin' : 'Signup'}
+                                onToggle={() => setSigningUp(!signingUp)}
+                            />
                         </Card.Body>
                     </Card>
                 </Col>
@@ -110,15 +41,12 @@ const Signin = props => {
     );
 };
 
-const mapStateToProps = state => ({
-    loggedIn: state.users.loggedIn,
-});
-
 const mapDispatchToProps = {
     signin: actions.signin,
+    signup: actions.signup,
 };
 
 export default connect(
-    mapStateToProps,
+    constant({}),
     mapDispatchToProps,
 )(Signin);

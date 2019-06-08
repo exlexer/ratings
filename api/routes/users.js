@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const {
+    getUsers,
     createUser,
     getUserByUsername,
     deleteUser,
@@ -11,6 +12,15 @@ const { setAuthToken } = require('../models/auth');
 const { hashPassword, checkPassword, getAuthToken } = require('../lib/auth');
 
 const authorize = require('../authorizeRequest');
+
+/**
+ * Get all user
+ */
+router.get('', authorize(), (req, res, next) => {
+    getUsers()
+        .then(data => res.json(data))
+        .catch(next);
+});
 
 /**
  * Add new user
@@ -75,10 +85,10 @@ router.get('/logout', (req, res) => {
 /**
  * Deletes a user
  */
-router.delete('/:id', authorize(), (req, res) => {
+router.delete('/:id', authorize(), (req, res, next) => {
     deleteUser(req.params.id)
         .then(() => {
-            req.json({ message: 'success' });
+            res.json({ message: 'success' });
         })
         .catch(next);
 });
@@ -86,10 +96,10 @@ router.delete('/:id', authorize(), (req, res) => {
 /**
  * Updates a user
  */
-router.patch('/:id', authorize(), (req, res) => {
+router.patch('/:id', authorize(), (req, res, next) => {
     updateUser(req.params.id, req.body)
         .then(() => {
-            req.json({ message: 'success' });
+            res.json({ message: 'success' });
         })
         .catch(next);
 });

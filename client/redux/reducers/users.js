@@ -1,6 +1,6 @@
 import actions from '../actions/users';
 import { handleActions } from 'redux-actions';
-import { forEach, split, some, trim } from 'lodash/fp';
+import { forEach, split, cloneDeep, remove } from 'lodash/fp';
 
 const getCookie = key => {
     const cookies = split(' ', document.cookie);
@@ -30,6 +30,25 @@ const reducer = handleActions(
             loggedIn: true,
         }),
         [actions.logout]: (state, { payload }) => ({ loggedIn: false }),
+        [actions.get]: (state, { payload }) => ({
+            ...state,
+            users: payload.data,
+        }),
+        [actions.update]: (state, { payload }) => {
+            const newState = cloneDeep(state);
+
+            forEach(u => {
+                if (u.id === payload.id) {
+                    u.role = payload.role;
+                }
+            }, newState.users);
+
+            return newState;
+        },
+        [actions.delete]: (state, { payload }) => ({
+            ...state,
+            users: remove(({ id }) => id === payload, state.users),
+        }),
     },
     defaultState,
 );
