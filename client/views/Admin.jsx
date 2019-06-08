@@ -13,15 +13,13 @@ import {
 import userActions from '../redux/actions/users';
 import restaurantActions from '../redux/actions/restaurants';
 import styled from 'styled-components';
+import { BlockQuote } from '../components/StyledComponents';
 
 import moment from 'moment';
 import Stars from '../components/Stars';
 
-const _formatDate = date => moment(date).format('MMM Do YY');
-
 const Review = styled.div`
     background: #fff;
-    padding: 10px 16px;
     padding: 10px 16px;
     border-left: 4px solid #ddd;
 `;
@@ -32,7 +30,7 @@ const Admin = props => {
         props.getRestaurants();
     }, []);
 
-    const tabStyles = { padding: 10, background: '#f8f9fa' };
+    const tabStyles = { padding: 10 };
 
     const _handleUserUpdate = id => e => {
         e.preventDefault();
@@ -76,7 +74,7 @@ const Admin = props => {
         props.deleteReview(restaurant, id);
 
     return (
-        <Container style={{ marginTop: 20 }}>
+        <Container fluid style={{ marginTop: 20 }}>
             <Tabs defaultActiveKey="users">
                 <Tab eventKey="users" title="Users" style={tabStyles}>
                     {map(
@@ -117,8 +115,12 @@ const Admin = props => {
                                             flexGrow: 'unset',
                                         }}
                                     >
-                                        <Button size="sm" type="submit">
-                                            Submit
+                                        <Button
+                                            size="sm"
+                                            variant="info"
+                                            type="submit"
+                                        >
+                                            Update
                                         </Button>
                                     </Col>
                                     <Col
@@ -167,8 +169,12 @@ const Admin = props => {
                                                 />
                                             </Col>
                                             <Col style={{ flexGrow: 'unset' }}>
-                                                <Button type="submit" size="sm">
-                                                    Submit
+                                                <Button
+                                                    type="submit"
+                                                    variant="info"
+                                                    size="sm"
+                                                >
+                                                    Update
                                                 </Button>
                                             </Col>
                                             <Col style={{ flexGrow: 'unset' }}>
@@ -189,7 +195,8 @@ const Admin = props => {
                                                 <Accordion.Toggle
                                                     as={Button}
                                                     eventKey={r.id}
-                                                    variant="link"
+                                                    variant="outline-info"
+                                                    size="sm"
                                                     type="button"
                                                 >
                                                     Reviews
@@ -199,7 +206,7 @@ const Admin = props => {
                                     </Form>
 
                                     <Accordion.Collapse eventKey={r.id}>
-                                        <Review>
+                                        <BlockQuote>
                                             {!!r.reviews.length ? (
                                                 map(
                                                     re => (
@@ -226,7 +233,6 @@ const Admin = props => {
                                                                         '100%',
                                                                 }}
                                                             >
-                                                                {re.reply}
                                                                 <Col>
                                                                     <Form.Control
                                                                         size="sm"
@@ -255,7 +261,12 @@ const Admin = props => {
                                                                         placeholder="No reply"
                                                                     />
                                                                 </Col>
-                                                                <Col>
+                                                                <Col
+                                                                    style={{
+                                                                        flexGrow:
+                                                                            'unset',
+                                                                    }}
+                                                                >
                                                                     <Form.Control
                                                                         size="sm"
                                                                         style={{
@@ -279,9 +290,10 @@ const Admin = props => {
                                                                 >
                                                                     <Button
                                                                         size="sm"
+                                                                        variant="info"
                                                                         type="submit"
                                                                     >
-                                                                        Submit
+                                                                        Update
                                                                     </Button>
                                                                 </Col>
                                                                 <Col
@@ -312,7 +324,7 @@ const Admin = props => {
                                             ) : (
                                                 <div>No reviews here!</div>
                                             )}
-                                        </Review>
+                                        </BlockQuote>
                                     </Accordion.Collapse>
                                 </>
                             );

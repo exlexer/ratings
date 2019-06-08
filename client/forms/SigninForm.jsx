@@ -52,7 +52,7 @@ const SigninForm = props => (
                 </Form.Group>
                 <Button
                     disabled={!isValid}
-                    variant="primary"
+                    variant="info"
                     type="submit"
                     style={{ marginRight: 10 }}
                 >

@@ -9,8 +9,6 @@ import Restaurant from '../components/Restaurant';
 import { ColumnContainer } from '../components/StyledComponents';
 import Stars from '../components/Stars';
 
-const mapWithKeys = map.convert({ cap: false });
-
 const Restaurants = props => {
     const [sortBy, setSortBy] = useState('rating');
     const [sortOrder, setSortOrder] = useState('desc');
@@ -67,20 +65,13 @@ const Restaurants = props => {
             />
         </Navbar>,
         <Container style={{ marginTop: 20 }}>
-            {mapWithKeys((r, index) => {
-                const style = {};
-
-                // if (index % 2) {
-                //     style.background = 'var(--light)';
-                // }
-
+            {map(r => {
                 const restaurantProps = {
                     key: r.id,
                     title: r.name,
                     rating: r.rating,
                     restaurant: r.id,
                     reviews: r.reviews,
-                    style,
                 };
 
                 if (props.role === 'user') {

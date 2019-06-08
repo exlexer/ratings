@@ -32,7 +32,7 @@ const ReplyForm = props => (
                     </Form.Control.Feedback>
                 </Form.Group>
                 <Button
-                    variant="primary"
+                    variant="info"
                     type="submit"
                     disabled={!isValid}
                     style={{ marginRight: 10 }}

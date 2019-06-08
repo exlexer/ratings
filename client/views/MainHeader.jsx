@@ -5,10 +5,9 @@ import { constant } from 'lodash/fp';
 
 import actions from '../redux/actions/users';
 
-const Header = ({ logout }) => (
+const MainHeader = ({ logout }) => (
     <Navbar bg="dark" variant="dark">
-        <Navbar.Brand>Restaurant Review</Navbar.Brand>
-        <div style={{ flexGrow: 1 }} />
+        <Navbar.Brand className="mr-auto">Restaurant Review</Navbar.Brand>
         <Button variant="outline-info" onClick={logout}>
             Logout
         </Button>
@@ -22,4 +21,4 @@ const mapDispatchToProps = {
 export default connect(
     constant({}),
     mapDispatchToProps,
-)(Header);
+)(MainHeader);
