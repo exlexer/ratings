@@ -11,9 +11,9 @@ const {
     updateRestaurant,
 } = require('../models/restaurants');
 const {
-    createReview,
     getReviewsByRestaurant,
-    replyToReview,
+    updateReview,
+    deleteReview,
 } = require('../models/reviews');
 
 const authorize = require('../authorizeRequest');
@@ -85,6 +85,28 @@ router.delete('/:id', authorize(), (req, res, next) =>
  */
 router.patch('/:id', authorize(), (req, res, next) =>
     updateRestaurant(req.params.id, req.body)
+        .then(() => {
+            res.json({ message: 'success' });
+        })
+        .catch(next),
+);
+
+/**
+ * Updates a restaurant's review
+ */
+router.patch('/:id/reviews/:review', authorize(), (req, res, next) =>
+    updateReview(req.params.id, req.params.review, req.body)
+        .then(() => {
+            res.json({ message: 'success' });
+        })
+        .catch(next),
+);
+
+/**
+ * Deletes a restaurant's review
+ */
+router.delete('/:id/reviews/:review', authorize(), (req, res, next) =>
+    deleteReview(req.params.id, req.params.review)
         .then(() => {
             res.json({ message: 'success' });
         })

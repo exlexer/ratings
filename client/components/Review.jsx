@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { Overlay, Popover } from 'react-bootstrap';
 import { MdReply } from 'react-icons/md';
 import { isFunction } from 'lodash/fp';
-import { ReplyForm } from './Forms';
+import ReplyForm from '../forms/ReplyForm';
 
 import { Header, User, Comment, Link } from './StyledComponents';
 import Stars from './Stars';

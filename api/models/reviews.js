@@ -106,17 +106,18 @@ function getReviewsByRestaurant(restaurant, includeReplied) {
     });
 }
 
-function deleteReview(review) {
+function deleteReview(restaurant, review) {
     return db.query(
         `
         delete from reviews
-        where id = $1
+        where restaurant = $1
+        and id = $2
     `,
-        [review],
+        [restaurant, review],
     );
 }
 
-function updateReview(review, options) {
+function updateReview(restaurant, review, options) {
     const values = [];
     const updates = [];
 
@@ -127,12 +128,14 @@ function updateReview(review, options) {
         }
     }, options);
 
+    values.push(restaurant);
     values.push(review);
 
     const query = `
-        update users
-        set ${join(', ', update)}
-        where id = $${values.length}`;
+        update reviews
+        set ${join(', ', updates)}
+        where restaurant = $${values.length - 1}
+        and id = $${values.length}`;
 
     return db.query(query, values);
 }

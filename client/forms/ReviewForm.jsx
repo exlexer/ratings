@@ -38,8 +38,6 @@ const ReviewForm = props => (
                     <Form.Control
                         type="date"
                         name="date"
-                        max={5}
-                        min={0}
                         values={values.date}
                         onChange={handleChange}
                         isValid={touched.date && !errors.date}

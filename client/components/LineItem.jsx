@@ -12,7 +12,7 @@ import {
     Title,
     Link,
 } from './StyledComponents';
-import { ReviewForm } from './Forms';
+import ReviewForm from '../forms/ReviewForm';
 
 const LineItem = props => {
     const [settingRating, setSettingRating] = useState();

@@ -9,10 +9,22 @@ import {
     Button,
     Col,
     Accordion,
-    Card,
 } from 'react-bootstrap';
 import userActions from '../redux/actions/users';
 import restaurantActions from '../redux/actions/restaurants';
+import styled from 'styled-components';
+
+import moment from 'moment';
+import Stars from '../components/Stars';
+
+const _formatDate = date => moment(date).format('MMM Do YY');
+
+const Review = styled.div`
+    background: #fff;
+    padding: 10px 16px;
+    padding: 10px 16px;
+    border-left: 4px solid #ddd;
+`;
 
 const Admin = props => {
     useEffect(() => {
@@ -36,14 +48,32 @@ const Admin = props => {
 
     const _handleRestaurantUpdate = id => e => {
         e.preventDefault();
-        const updatedUser = {
+        const updatedRestaurant = {
             name: e.currentTarget[0].value,
         };
 
-        props.updateRestaurant(id, updatedUser);
+        props.updateRestaurant(id, updatedRestaurant);
     };
 
     const _handleRestaurantDelete = id => props.deleteRestaurant(id);
+
+    const _handleReviewUpdate = (restaurant, id) => e => {
+        e.preventDefault();
+        const updatedReview = {
+            comment: e.currentTarget[0].value,
+            reply:
+                e.currentTarget[1].value === ''
+                    ? null
+                    : e.currentTarget[1].value,
+            visit_date: e.currentTarget[2].value,
+        };
+
+        console.log(id, updatedReview);
+        props.updateReview(restaurant, id, updatedReview);
+    };
+
+    const _handleReviewDelete = (restaurant, id) =>
+        props.deleteReview(restaurant, id);
 
     return (
         <Container style={{ marginTop: 20 }}>
@@ -60,6 +90,7 @@ const Admin = props => {
                                 <Form.Row style={{ width: '100%' }}>
                                     <Col>
                                         <Form.Control
+                                            size="sm"
                                             style={{
                                                 width: '100%',
                                             }}
@@ -72,6 +103,7 @@ const Admin = props => {
                                         }}
                                     >
                                         <Form.Control
+                                            size="sm"
                                             defaultValue={u.role}
                                             as="select"
                                         >
@@ -85,7 +117,9 @@ const Admin = props => {
                                             flexGrow: 'unset',
                                         }}
                                     >
-                                        <Button type="submit">Submit</Button>
+                                        <Button size="sm" type="submit">
+                                            Submit
+                                        </Button>
                                     </Col>
                                     <Col
                                         style={{
@@ -94,6 +128,7 @@ const Admin = props => {
                                     >
                                         <Button
                                             variant="danger"
+                                            size="sm"
                                             type="button"
                                             onClick={() =>
                                                 _handleUserDelete(u.id)
@@ -126,17 +161,19 @@ const Admin = props => {
                                         <Form.Row style={{ width: '100%' }}>
                                             <Col>
                                                 <Form.Control
+                                                    size="sm"
                                                     style={{ width: '100%' }}
                                                     defaultValue={r.name}
                                                 />
                                             </Col>
                                             <Col style={{ flexGrow: 'unset' }}>
-                                                <Button type="submit">
+                                                <Button type="submit" size="sm">
                                                     Submit
                                                 </Button>
                                             </Col>
                                             <Col style={{ flexGrow: 'unset' }}>
                                                 <Button
+                                                    size="sm"
                                                     variant="danger"
                                                     type="button"
                                                     onClick={() =>
@@ -162,9 +199,120 @@ const Admin = props => {
                                     </Form>
 
                                     <Accordion.Collapse eventKey={r.id}>
-                                        <Card.Body>
-                                            Hello! I'm the body
-                                        </Card.Body>
+                                        <Review>
+                                            {!!r.reviews.length ? (
+                                                map(
+                                                    re => (
+                                                        <Form
+                                                            key={re.id}
+                                                            style={{
+                                                                padding: 10,
+                                                            }}
+                                                            onSubmit={_handleReviewUpdate(
+                                                                re.restaurant,
+                                                                re.id,
+                                                            )}
+                                                            inline
+                                                        >
+                                                            {re.username}
+                                                            <Stars
+                                                                rating={
+                                                                    r.rating
+                                                                }
+                                                            />
+                                                            <Form.Row
+                                                                style={{
+                                                                    width:
+                                                                        '100%',
+                                                                }}
+                                                            >
+                                                                {re.reply}
+                                                                <Col>
+                                                                    <Form.Control
+                                                                        size="sm"
+                                                                        style={{
+                                                                            width:
+                                                                                '100%',
+                                                                        }}
+                                                                        defaultValue={
+                                                                            re.comment
+                                                                        }
+                                                                    />
+                                                                </Col>
+                                                                <Col>
+                                                                    <Form.Control
+                                                                        size="sm"
+                                                                        style={{
+                                                                            width:
+                                                                                '100%',
+                                                                        }}
+                                                                        disabled={
+                                                                            !re.reply
+                                                                        }
+                                                                        defaultValue={
+                                                                            re.reply
+                                                                        }
+                                                                        placeholder="No reply"
+                                                                    />
+                                                                </Col>
+                                                                <Col>
+                                                                    <Form.Control
+                                                                        size="sm"
+                                                                        style={{
+                                                                            width: 170,
+                                                                        }}
+                                                                        type="date"
+                                                                        name="date"
+                                                                        defaultValue={moment(
+                                                                            re.visit_date,
+                                                                        ).format(
+                                                                            'YYYY-MM-DD',
+                                                                        )}
+                                                                    />
+                                                                </Col>
+
+                                                                <Col
+                                                                    style={{
+                                                                        flexGrow:
+                                                                            'unset',
+                                                                    }}
+                                                                >
+                                                                    <Button
+                                                                        size="sm"
+                                                                        type="submit"
+                                                                    >
+                                                                        Submit
+                                                                    </Button>
+                                                                </Col>
+                                                                <Col
+                                                                    style={{
+                                                                        flexGrow:
+                                                                            'unset',
+                                                                    }}
+                                                                >
+                                                                    <Button
+                                                                        size="sm"
+                                                                        variant="danger"
+                                                                        type="button"
+                                                                        onClick={() =>
+                                                                            _handleReviewDelete(
+                                                                                re.restaurant,
+                                                                                re.id,
+                                                                            )
+                                                                        }
+                                                                    >
+                                                                        Delete
+                                                                    </Button>
+                                                                </Col>
+                                                            </Form.Row>
+                                                        </Form>
+                                                    ),
+                                                    r.reviews,
+                                                )
+                                            ) : (
+                                                <div>No reviews here!</div>
+                                            )}
+                                        </Review>
                                     </Accordion.Collapse>
                                 </>
                             );
@@ -188,6 +336,8 @@ const mapDispatchToProps = {
     deleteRestaurant: restaurantActions.delete,
     updateUser: userActions.update,
     deleteUser: userActions.delete,
+    updateReview: restaurantActions.updateReview,
+    deleteReview: restaurantActions.deleteReview,
 };
 
 export default connect(

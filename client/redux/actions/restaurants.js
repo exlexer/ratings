@@ -37,5 +37,13 @@ export default createActions({
                 .then(() => ({ id, updated })),
         DELETE: restaurant =>
             api.delete(`restaurants/${restaurant}`).then(() => restaurant),
+        UPDATE_REVIEW: (restaurant, id, updated) =>
+            api
+                .patch(`restaurants/${restaurant}/reviews/${id}`, updated)
+                .then(() => ({ restaurant, id, updated })),
+        DELETE_REVIEW: (restaurant, id) =>
+            api
+                .delete(`restaurants/${restaurant}/reviews/${id}`)
+                .then(() => ({ restaurant, id })),
     },
 }).restaurants;
