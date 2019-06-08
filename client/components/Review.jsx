@@ -4,10 +4,18 @@ import { MdReply } from 'react-icons/md';
 import { isFunction } from 'lodash/fp';
 import ReplyForm from '../forms/ReplyForm';
 
-import { Header, User, Comment, Link } from './StyledComponents';
+import { Header, User, Comment, Link, BlockQuote } from './StyledComponents';
 import Stars from './Stars';
 
-const Review = ({ restaurant, username, comment, rate, id, onReply }) => {
+const Review = ({
+    restaurant,
+    username,
+    comment,
+    reply,
+    rate,
+    id,
+    onReply,
+}) => {
     const replyRef = useRef();
     const [replying, setReplying] = useState();
 
@@ -17,9 +25,9 @@ const Review = ({ restaurant, username, comment, rate, id, onReply }) => {
     };
 
     return (
-        <div>
+        <BlockQuote>
             <Header>
-                <User>{username}</User>
+                <Stars rating={rate} />
                 {isFunction(onReply) && [
                     <div key="button" ref={replyRef}>
                         <Link onClick={() => setReplying(!replying)}>
@@ -43,9 +51,11 @@ const Review = ({ restaurant, username, comment, rate, id, onReply }) => {
                     </Overlay>,
                 ]}
             </Header>
-            <Comment>{comment}</Comment>
-            <Stars rating={rate} />
-        </div>
+            <User>{username}</User>
+            <Comment>"{comment}"</Comment>
+            {!!reply && <User>Owner Reply</User>}
+            {!!reply && <Comment>"{reply}"</Comment>}
+        </BlockQuote>
     );
 };
 

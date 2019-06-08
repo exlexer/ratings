@@ -3,11 +3,15 @@ import { Modal } from 'react-bootstrap';
 import { map } from 'lodash/fp';
 
 import Review from './Review';
+import Stars from './Stars';
 const DetailModal = props => {
     return (
         <Modal show={props.show} onHide={props.onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>{props.title}</Modal.Title>
+                <Modal.Title style={{ display: 'flex' }}>
+                    {props.title}
+                    <Stars style={{ paddingLeft: 10 }} rating={props.rating} />
+                </Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 {map(

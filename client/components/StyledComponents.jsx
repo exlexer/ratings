@@ -6,14 +6,22 @@ export const Container = style.div`
     display: flex;
 `;
 
+export const BlockQuote = style.div`
+    background: var(--light);
+    border-left: 4px solid var(--info);
+    padding: 8px 16px;
+`;
+
 export const SmallColumnContainer = style.div`
     flex-grow: 1;
     flex-basis: 0;
+    padding-left: 8px;
 `;
 
 export const ColumnContainer = style.div`
     flex-grow: 2;
     flex-basis: 0;
+    padding-left: 8px;
 `;
 
 export const Title = style.div`
@@ -25,20 +33,23 @@ export const Header = style.div`
 `;
 
 export const User = style.div`
+    color: var(--gray-dark);
     font-weight: 500;
-    flex-grow: 1;
+    padding-right: 10px;
 `;
 
 export const Comment = style.div`
-    font-weight: 200;
+    color: var(--info);
+    padding: 10px 16px;
+    font-weight: 100;
     font-style: italic;
-    padding: 5px;
+    border-radius: 2px;
 `;
 
 export const Link = style.button`
     border: none;
     background: none;
-    color: #007bff;
+    color: var(--info);
     font-weight: 100;
     padding: 0;
     font-size: 12px;
@@ -49,6 +60,6 @@ export const Link = style.button`
 `;
 
 export const Rating = style.div`
-    color: #ddd;
+    color: var(--secondary);
     width: fit-content;
 `;

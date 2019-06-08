@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { isArray, toNumber, map } = require('lodash/fp');
+const { isArray, toNumber, map, reduce } = require('lodash/fp');
 const mapWithKeys = map.convert({ cap: false });
 
 const {
@@ -37,16 +37,19 @@ router.post('', authorize(['owner']), (req, res, next) =>
  * Get all restaurants
  */
 router.get('', authorize(['user', 'owner']), (req, res, next) => {
+    const { sortBy = 'rating', sortOrder = 'desc' } = req.query;
+
     const gettingRestaurants =
         req.user.role === 'owner'
-            ? getRestaurantsByOwner(req.user.id)
-            : getRestaurants();
+            ? getRestaurantsByOwner(sortBy, sortOrder, req.user.id)
+            : getRestaurants(sortBy, sortOrder);
 
     let _restaurants;
 
     gettingRestaurants
         .then(restaurants => {
             _restaurants = isArray(restaurants) ? restaurants : [restaurants];
+            console.log(map(r => r.id, _restaurants));
             return Promise.all(
                 map(
                     ({ id }) =>

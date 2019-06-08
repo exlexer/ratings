@@ -6,10 +6,10 @@ import { constant } from 'lodash/fp';
 import actions from '../redux/actions/users';
 
 const Header = ({ logout }) => (
-    <Navbar bg="light" key="nav">
+    <Navbar bg="dark" variant="dark">
         <Navbar.Brand>Restaurant Review</Navbar.Brand>
         <div style={{ flexGrow: 1 }} />
-        <Button variant="link" onClick={logout}>
+        <Button variant="outline-info" onClick={logout}>
             Logout
         </Button>
     </Navbar>

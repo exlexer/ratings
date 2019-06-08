@@ -23,33 +23,45 @@ function createRestaurant(name, owner) {
     );
 }
 
-function getRestaurants() {
-    return db.query(`
-        select name,
-            id,
-            (
-                select avg(rate)
-                from reviews
-                where restaurant = r.id
-            ) rating
-        from restaurants r
-        order by rating asc
-    `);
-}
-
-function getRestaurantsByOwner(owner) {
+function getRestaurants(sortBy, sortOrder) {
+    console.log(`${sortBy} ${sortOrder}`);
     return db.query(
         `
         select name,
             id,
             (
-                select avg(rate)
+                select CASE
+                WHEN avg(rate) is not NULL
+                then avg(rate)::integer
+                else 0
+                end
+                from reviews
+                where restaurant = r.id
+            ) rating
+        from restaurants r
+        order by ${sortBy} ${sortOrder}
+    `,
+    );
+}
+
+function getRestaurantsByOwner(sortBy, sortOrder, owner) {
+    console.log(`${sortBy} ${sortOrder}`);
+    return db.query(
+        `
+        select name,
+            id,
+            (
+                select CASE
+                WHEN avg(rate) is not NULL
+                then avg(rate)::integer
+                else 0
+                end
                 from reviews
                 where restaurant = r.id
             ) rating
         from restaurants r
         where owner = $1
-        order by rating asc
+        order by ${sortBy} ${sortOrder}
     `,
         [owner],
     );

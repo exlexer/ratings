@@ -59,10 +59,10 @@ router.post('/signin', (req, res, next) => {
             if (checkPassword(hashed, salt, password)) {
                 token = getAuthToken(username);
                 res.cookie('access_token', token, {
-                    maxAge: 900000,
+                    maxAge: 1000 * 60 * 60 * 24,
                 });
                 res.cookie('role', role, {
-                    maxAge: 900000,
+                    maxAge: 1000 * 60 * 60 * 24,
                 });
                 return setAuthToken(token, id);
             } else {

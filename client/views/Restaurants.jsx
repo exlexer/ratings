@@ -1,26 +1,78 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { map } from 'lodash/fp';
+import { map, filter } from 'lodash/fp';
 import actions from '../redux/actions/restaurants';
-import { Container } from 'react-bootstrap';
-import LineItem from '../components/LineItem';
+
+import { MdExpandLess, MdExpandMore } from 'react-icons/md';
+import { Container, Nav, Navbar } from 'react-bootstrap';
+import Restaurant from '../components/Restaurant';
 import { ColumnContainer } from '../components/StyledComponents';
+import Stars from '../components/Stars';
 
 const mapWithKeys = map.convert({ cap: false });
 
 const Restaurants = props => {
-    useEffect(() => {
-        props.loadRestaurants();
-    }, []);
+    const [sortBy, setSortBy] = useState('rating');
+    const [sortOrder, setSortOrder] = useState('desc');
+    const [starFilter, setStarFilter] = useState();
 
-    return (
+    useEffect(() => {
+        props.loadRestaurants(sortBy, sortOrder);
+    }, [sortBy, sortOrder]);
+
+    const _sort = _sortBy => () => {
+        if (sortBy === _sortBy) {
+            setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+        } else {
+            setSortOrder('asc');
+            setSortBy(_sortBy);
+        }
+    };
+
+    const _filterReviews = reviews => {
+        if (starFilter) {
+            return filter(r => r.rating >= starFilter, reviews);
+        } else {
+            return reviews;
+        }
+    };
+
+    const _isSorted = key => {
+        if (key === sortBy) {
+            if (sortOrder === 'asc') {
+                return <MdExpandLess />;
+            } else {
+                return <MdExpandMore />;
+            }
+        }
+        return null;
+    };
+
+    return [
+        <Navbar bg="light">
+            <Navbar.Brand>Sort Order</Navbar.Brand>
+            <Nav className="mr-auto">
+                <Nav.Link onClick={_sort('rating')}>
+                    Rating {_isSorted('rating')}
+                </Nav.Link>
+                <Nav.Link onClick={_sort('name')}>
+                    Restaurant Name {_isSorted('name')}
+                </Nav.Link>
+            </Nav>
+            <Navbar.Brand>Filter</Navbar.Brand>
+            <Stars
+                rating={starFilter}
+                clearable
+                onClick={n => setStarFilter(n)}
+            />
+        </Navbar>,
         <Container style={{ marginTop: 20 }}>
             {mapWithKeys((r, index) => {
                 const style = {};
 
-                if (index % 2) {
-                    style.background = '#f8f9fa';
-                }
+                // if (index % 2) {
+                //     style.background = 'var(--light)';
+                // }
 
                 const restaurantProps = {
                     key: r.id,
@@ -53,10 +105,10 @@ const Restaurants = props => {
                     );
                 }
 
-                return <LineItem {...restaurantProps} />;
-            }, props.restaurants)}
-        </Container>
-    );
+                return <Restaurant {...restaurantProps} />;
+            }, _filterReviews(props.restaurants))}
+        </Container>,
+    ];
 };
 
 const mapStateToProps = state => ({

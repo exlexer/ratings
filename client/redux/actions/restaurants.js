@@ -3,8 +3,10 @@ import api from '../../api';
 
 export default createActions({
     RESTAURANTS: {
-        LOAD: async () => {
-            const { data } = await api.get('restaurants');
+        LOAD: async (sortBy, sortOrder) => {
+            const { data } = await api.get('restaurants', {
+                params: { sortBy, sortOrder },
+            });
             return data;
         },
         REVIEW: (restaurant, rate, date, comment) =>
@@ -22,10 +24,7 @@ export default createActions({
                     comment,
                 })
                 .then(api.get('restaurants'))
-                .then(({ data }) => {
-                    console.log(data);
-                    return data;
-                }),
+                .then(({ data }) => data),
         UPDATE: (id, updated) =>
             api
                 .patch(`restaurants/${id}`, updated)

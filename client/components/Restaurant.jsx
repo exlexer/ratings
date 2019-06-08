@@ -14,7 +14,7 @@ import {
 } from './StyledComponents';
 import ReviewForm from '../forms/ReviewForm';
 
-const LineItem = props => {
+const Restaurant = props => {
     const [settingRating, setSettingRating] = useState();
     const starsRef = useRef();
 
@@ -43,8 +43,10 @@ const LineItem = props => {
             <ColumnContainer>
                 <div>Highest Rating</div>
                 <Review {...props.highestRating} />
-                <div>Lowest Rating</div>
-                <Review {...props.lowestRating} />
+                {props.reviews.length > 1 && [
+                    <div key="label">Lowest Rating</div>,
+                    <Review key="review" {...props.lowestRating} />,
+                ]}
             </ColumnContainer>
         );
 
@@ -86,7 +88,9 @@ const LineItem = props => {
                     onClick={props.onReview ? _handleSetRating : null}
                     active={settingRating}
                 />
-                <Link onClick={() => setShowingDetail(true)}>View Details</Link>
+                <Link onClick={() => setShowingDetail(true)}>
+                    View All Reviews
+                </Link>
                 <Overlay
                     show={!!settingRating}
                     target={starsRef.current}
@@ -115,4 +119,4 @@ const LineItem = props => {
     );
 };
 
-export default LineItem;
+export default Restaurant;
