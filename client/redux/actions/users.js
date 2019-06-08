@@ -26,8 +26,8 @@ export default createActions({
             return {};
         },
         GET: () => api.get('users'),
-        UPDATE: (id, role) =>
-            api.patch(`users/${id}`, { role }).then(() => ({ id, role })),
+        UPDATE: (id, updated) =>
+            api.patch(`users/${id}`, updated).then(() => ({ id, updated })),
         DELETE: user => api.delete(`users/${user}`).then(() => user),
     },
 }).users;

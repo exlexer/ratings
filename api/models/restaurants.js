@@ -79,9 +79,11 @@ function updateRestaurant(restaurant, options) {
     values.push(restaurant);
 
     const query = `
-        update users
-        set ${join(', ', update)}
+        update restaurants
+        set ${join(', ', updates)}
         where id = $${values.length}`;
+
+    console.log(query);
 
     return db.query(query, values);
 }

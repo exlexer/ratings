@@ -1,6 +1,7 @@
 import actions from '../actions/users';
 import { handleActions } from 'redux-actions';
 import { forEach, split, cloneDeep, remove } from 'lodash/fp';
+const forEachWithKeys = forEach.convert({ cap: false });
 
 const getCookie = key => {
     const cookies = split(' ', document.cookie);
@@ -37,9 +38,9 @@ const reducer = handleActions(
         [actions.update]: (state, { payload }) => {
             const newState = cloneDeep(state);
 
-            forEach(u => {
+            forEachWithKeys((u, index) => {
                 if (u.id === payload.id) {
-                    u.role = payload.role;
+                    newState.users[index] = payload.updated;
                 }
             }, newState.users);
 

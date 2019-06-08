@@ -31,6 +31,10 @@ export default createActions({
                     console.log(data);
                     return data;
                 }),
+        UPDATE: (id, updated) =>
+            api
+                .patch(`restaurants/${id}`, updated)
+                .then(() => ({ id, updated })),
         DELETE: restaurant =>
             api.delete(`restaurants/${restaurant}`).then(() => restaurant),
     },
