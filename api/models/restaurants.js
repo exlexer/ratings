@@ -33,7 +33,7 @@ function getRestaurants() {
                 where restaurant = r.id
             ) rating
         from restaurants r
-        order by rating desc
+        order by rating asc
     `);
 }
 
@@ -49,7 +49,7 @@ function getRestaurantsByOwner(owner) {
             ) rating
         from restaurants r
         where owner = $1
-        order by rating desc
+        order by rating asc
     `,
         [owner],
     );

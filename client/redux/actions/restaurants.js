@@ -9,21 +9,16 @@ export default createActions({
         },
         REVIEW: (restaurant, rate, date, comment) =>
             api
-                .post('reviews', {
-                    restaurant,
+                .post(`restaurants/${restaurant}/reviews`, {
                     rate,
                     date,
                     comment,
                 })
                 .then(api.get('restaurants'))
-                .then(({ data }) => {
-                    console.log(data);
-                    return data;
-                }),
-
-        REPLY: (review, comment) =>
+                .then(({ data }) => data),
+        REPLY: (restaurant, review, comment) =>
             api
-                .post(`reviews/${review}/reply`, {
+                .post(`restaurants/${restaurant}/reviews/${review}/reply`, {
                     comment,
                 })
                 .then(api.get('restaurants'))

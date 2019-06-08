@@ -7,12 +7,12 @@ import ReplyForm from '../forms/ReplyForm';
 import { Header, User, Comment, Link } from './StyledComponents';
 import Stars from './Stars';
 
-const Review = ({ username, comment, rate, id, onReply }) => {
+const Review = ({ restaurant, username, comment, rate, id, onReply }) => {
     const replyRef = useRef();
     const [replying, setReplying] = useState();
 
     const _handleSubmit = ({ comment }) => {
-        onReply(id, comment);
+        onReply(restaurant, id, comment);
         setReplying(false);
     };
 

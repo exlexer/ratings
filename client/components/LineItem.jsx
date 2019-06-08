@@ -62,7 +62,7 @@ const LineItem = props => {
         );
 
     const _getUnreplied = () =>
-        !!props.review.length && (
+        !!props.reviews.length && (
             <ColumnContainer>
                 Unreplied Reviews
                 {map(

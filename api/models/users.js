@@ -9,7 +9,7 @@ module.exports = {
     createUser,
     getUserByUsername,
     getUserByToken,
-    getOwnerByReview,
+    getOwnerByRestaurant,
     deleteUser,
     updateUser,
 };
@@ -62,7 +62,7 @@ function getUserByToken(token) {
     );
 }
 
-function getOwnerByReview(review) {
+function getOwnerByRestaurant(restaurant) {
     return db.query(
         `
         select *
@@ -70,14 +70,10 @@ function getOwnerByReview(review) {
         where id = (
             select owner
             from restaurants
-            where id = (
-                select restaurant
-                from reviews
-                where id = $1
-            )
+            where id = $1
         )
     `,
-        [review],
+        [restaurant],
     );
 }
 

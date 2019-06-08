@@ -14,7 +14,10 @@ const {
     getReviewsByRestaurant,
     updateReview,
     deleteReview,
+    createReview,
+    replyToReview,
 } = require('../models/reviews');
+const { getOwnerByRestaurant } = require('../models/users');
 
 const authorize = require('../authorizeRequest');
 
@@ -111,6 +114,49 @@ router.delete('/:id/reviews/:review', authorize(), (req, res, next) =>
             res.json({ message: 'success' });
         })
         .catch(next),
+);
+
+/**
+ * Add new review
+ * @param {number} rate
+ * @param {date} date
+ * @param {string} comment
+ */
+router.post('/:id/reviews', authorize(['user']), (req, res, next) => {
+    const { rate, date, comment } = req.body;
+
+    createReview(req.user.id, req.params.id, rate, date, comment)
+        .then(() => res.json({ message: 'success' }))
+        .catch(next);
+});
+
+/**
+ * Reply to a review
+ * @param {number} rate
+ * @param {date} date
+ * @param {string} comment
+ */
+router.post(
+    '/:id/reviews/:review/reply',
+    authorize(['owner']),
+    (req, res, next) => {
+        const { id, review } = req.params;
+        const { comment } = req.body;
+
+        getOwnerByRestaurant(id)
+            .then(data => {
+                if (data.id === req.user.id) {
+                    return replyToReview(review, comment);
+                } else {
+                    res.sendStatus(401);
+                    throw new Error('Unauthorized');
+                }
+            })
+            .then(data => {
+                res.json({ message: 'Success!' });
+            })
+            .catch(next);
+    },
 );
 
 module.exports = router;

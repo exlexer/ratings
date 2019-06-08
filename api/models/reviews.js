@@ -23,7 +23,6 @@ function createReview(user, restaurant, rate, date, comment) {
 }
 
 function replyToReview(review, reply) {
-    console.log(review, reply);
     return db.query(
         `
         update reviews
