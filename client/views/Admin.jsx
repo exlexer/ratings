@@ -66,7 +66,6 @@ const Admin = props => {
             visit_date: e.currentTarget[2].value,
         };
 
-        console.log(id, updatedReview);
         props.updateReview(restaurant, id, updatedReview);
     };
 

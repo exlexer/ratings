@@ -24,7 +24,6 @@ function createRestaurant(name, owner) {
 }
 
 function getRestaurants(sortBy, sortOrder) {
-    console.log(`${sortBy} ${sortOrder}`);
     return db.query(
         `
         select name,
@@ -45,7 +44,6 @@ function getRestaurants(sortBy, sortOrder) {
 }
 
 function getRestaurantsByOwner(sortBy, sortOrder, owner) {
-    console.log(`${sortBy} ${sortOrder}`);
     return db.query(
         `
         select name,
@@ -94,8 +92,6 @@ function updateRestaurant(restaurant, options) {
         update restaurants
         set ${join(', ', updates)}
         where id = $${values.length}`;
-
-    console.log(query);
 
     return db.query(query, values);
 }

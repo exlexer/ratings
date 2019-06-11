@@ -49,7 +49,6 @@ router.get('', authorize(['user', 'owner']), (req, res, next) => {
     gettingRestaurants
         .then(restaurants => {
             _restaurants = isArray(restaurants) ? restaurants : [restaurants];
-            console.log(map(r => r.id, _restaurants));
             return Promise.all(
                 map(
                     ({ id }) =>
@@ -129,14 +128,12 @@ router.post('/:id/reviews', authorize(['user']), (req, res, next) => {
     const { rate, date, comment } = req.body;
 
     createReview(req.user.id, req.params.id, rate, date, comment)
-        .then(() => res.json({ message: 'success' }))
+        .then(({ id }) => res.json({ id }))
         .catch(next);
 });
 
 /**
  * Reply to a review
- * @param {number} rate
- * @param {date} date
  * @param {string} comment
  */
 router.post(

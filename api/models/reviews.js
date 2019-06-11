@@ -17,6 +17,7 @@ function createReview(user, restaurant, rate, date, comment) {
         `
         insert into reviews ("user", restaurant, rate, visit_date, comment)
         values ($1, $2, $3, $4, $5)
+        returning id
     `,
         [user, restaurant, rate, date, comment],
     );

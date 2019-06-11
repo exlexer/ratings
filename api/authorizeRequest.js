@@ -23,8 +23,6 @@ module.exports = (roles = []) => (req, res, next) => {
             req.user = pick(['id', 'username', 'role'], user);
             next();
         } else {
-            res.clearCookie('access_token');
-            res.clearCookie('role');
             res.sendStatus(401);
         }
     });

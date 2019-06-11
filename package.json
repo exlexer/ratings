@@ -6,7 +6,8 @@
     "scripts": {
         "start": "nodemon bin/www",
         "build": "webpack",
-        "develop": "webpack --watch"
+        "develop": "webpack --watch",
+        "test": "mocha --exit \"./spec/*.js\""
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
@@ -35,6 +36,7 @@
         "jsxobj": "^1.1.0",
         "lodash": "^4.17.11",
         "md5": "^2.2.1",
+        "mocha": "^6.1.4",
         "moment": "^2.24.0",
         "morgan": "^1.9.1",
         "nodemon": "^1.19.1",
@@ -51,8 +53,11 @@
         "redux-action": "^1.2.2",
         "redux-actions": "^2.6.5",
         "redux-promise": "^0.6.0",
+        "request": "^2.88.0",
         "style-loader": "^0.23.1",
         "styled-components": "^4.3.0",
+        "supertest": "^4.0.2",
+        "supertest-as-promised": "^4.0.2",
         "webpack": "^4.32.2",
         "yup": "^0.27.0"
     },
