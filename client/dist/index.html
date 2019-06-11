@@ -1,81 +1,16 @@
-Html Webpack Plugin:
-<pre>
-  Error: Child compilation failed:
-  Module build failed: Error: ENOENT: no such file or directory, open '/Users/kylehilton/Sites/ToptalTest/node_modules/lodash/lodash.js':
-  Error: ENOENT: no such file or directory, open '/Users/kylehilton/Sites/ToptalTest/node_modules/lodash/lodash.js'
-  
-  - compiler.js:79 childCompiler.runAsChild
-    [ToptalTest]/[html-webpack-plugin]/lib/compiler.js:79:16
-  
-  - Compiler.js:306 compile
-    [ToptalTest]/[webpack]/lib/Compiler.js:306:11
-  
-  - Compiler.js:631 hooks.afterCompile.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compiler.js:631:15
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compiler.js:628 compilation.seal.err
-    [ToptalTest]/[webpack]/lib/Compiler.js:628:31
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1329 hooks.optimizeAssets.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1329:35
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1320 hooks.optimizeChunkAssets.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1320:32
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1315 hooks.additionalAssets.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1315:36
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1311 hooks.optimizeTree.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1311:32
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1248 Compilation.seal
-    [ToptalTest]/[webpack]/lib/Compilation.js:1248:27
-  
-  - Compiler.js:625 compilation.finish.err
-    [ToptalTest]/[webpack]/lib/Compiler.js:625:18
-  
-  - Compilation.js:1171 hooks.finishModules.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1171:4
-  
-  
-  - Hook.js:154 AsyncSeriesHook.lazyCompileHook
-    [ToptalTest]/[tapable]/lib/Hook.js:154:20
-  
-  - Compilation.js:1163 Compilation.finish
-    [ToptalTest]/[webpack]/lib/Compilation.js:1163:28
-  
-  - Compiler.js:622 hooks.make.callAsync.err
-    [ToptalTest]/[webpack]/lib/Compiler.js:622:17
-  
-  
-  - Compilation.js:1095 _addModuleChain
-    [ToptalTest]/[webpack]/lib/Compilation.js:1095:12
-  
-  - Compilation.js:1007 processModuleDependencies.err
-    [ToptalTest]/[webpack]/lib/Compilation.js:1007:9
-  
-</pre><script type="text/javascript" src="build.js"></script>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>Application</title>
+        <link
+            rel="stylesheet"
+            href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+            crossorigin="anonymous"
+        />
+    </head>
+    <body>
+        <div id="app"></div>
+    <script type="text/javascript" src="build.js"></script></body>
+</html>

@@ -48,6 +48,11 @@ router.get('', authorize(['user', 'owner']), (req, res, next) => {
 
     gettingRestaurants
         .then(restaurants => {
+            console.log(restaurants);
+            if (restaurants.command) {
+                _restaurants = [];
+                return [];
+            }
             _restaurants = isArray(restaurants) ? restaurants : [restaurants];
             return Promise.all(
                 map(

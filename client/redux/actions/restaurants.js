@@ -3,12 +3,17 @@ import api from '../../api';
 
 export default createActions({
     RESTAURANTS: {
-        LOAD: async (sortBy, sortOrder) => {
-            const { data } = await api.get('restaurants', {
-                params: { sortBy, sortOrder },
-            });
-            return data;
-        },
+        CREATE_RESTAURANT: name =>
+            api
+                .post('restaurants', { name })
+                .then(() => api.get('restaurants'))
+                .then(({ data }) => data),
+        LOAD: (sortBy, sortOrder) =>
+            api
+                .get('restaurants', {
+                    params: { sortBy, sortOrder },
+                })
+                .then(({ data }) => data),
         REVIEW: (restaurant, rate, date, comment) =>
             api
                 .post(`restaurants/${restaurant}/reviews`, {
@@ -16,14 +21,14 @@ export default createActions({
                     date,
                     comment,
                 })
-                .then(api.get('restaurants'))
+                .then(() => api.get('restaurants'))
                 .then(({ data }) => data),
         REPLY: (restaurant, review, comment) =>
             api
                 .post(`restaurants/${restaurant}/reviews/${review}/reply`, {
                     comment,
                 })
-                .then(api.get('restaurants'))
+                .then(() => api.get('restaurants'))
                 .then(({ data }) => data),
         UPDATE: (id, updated) =>
             api

@@ -1,17 +1,23 @@
 import 'babel-polyfill';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider, connect } from 'react-redux';
 import store from './redux';
+
+import actions from './redux/actions/users';
 
 import MainHeader from './views/MainHeader';
 import SignIn from './views/SignIn';
 import Restaurants from './views/Restaurants';
 import Admin from './views/Admin';
 
-const App = ({ loggedIn, role }) => {
+const App = ({ loggedIn, role, authorize }) => {
+    useEffect(() => {
+        authorize();
+    }, [role]);
+
     if (!loggedIn) {
         return <SignIn />;
     }
@@ -25,8 +31,12 @@ const App = ({ loggedIn, role }) => {
 };
 
 const mapStateToProps = ({ users }) => users;
+const mapActions = { authorize: actions.authorize };
 
-const AppContainer = connect(mapStateToProps)(App);
+const AppContainer = connect(
+    mapStateToProps,
+    mapActions,
+)(App);
 
 ReactDOM.render(
     <Provider store={store}>

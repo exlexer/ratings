@@ -54,7 +54,7 @@ const SigninForm = props => (
                     disabled={!isValid}
                     variant="info"
                     type="submit"
-                    style={{ marginRight: 10 }}
+                    className="mr-2"
                 >
                     Submit
                 </Button>

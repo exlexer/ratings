@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
 
-import { Container, Row, Col, Card } from 'react-bootstrap';
-import { constant } from 'lodash/fp';
+import { Alert, Container, Row, Col, Card } from 'react-bootstrap';
 import SigninForm from '../forms/SigninForm';
 
 const Signin = props => {
@@ -25,6 +24,9 @@ const Signin = props => {
                             <Card.Title>
                                 {signingUp ? 'Signup' : 'Signin'}
                             </Card.Title>
+                            {props.error && (
+                                <Alert variant="danger">{props.error}</Alert>
+                            )}
                             <SigninForm
                                 onSubmit={
                                     signingUp ? _handleSignup : _handleSignin
@@ -46,7 +48,11 @@ const mapDispatchToProps = {
     signup: actions.signup,
 };
 
+const mapStateToProps = state => ({
+    error: state.users.error,
+});
+
 export default connect(
-    constant({}),
+    mapStateToProps,
     mapDispatchToProps,
 )(Signin);

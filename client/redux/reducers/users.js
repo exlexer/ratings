@@ -18,17 +18,23 @@ const getCookie = key => {
     return value;
 };
 
-const defaultState = {
-    loggedIn: !!getCookie('access_token'),
-    role: getCookie('role'),
-};
+const defaultState = {};
 
 const reducer = handleActions(
     {
+        [actions.authorize]: (state, { payload }) => ({
+            ...state,
+            ...payload,
+        }),
         [actions.signin]: (state, { payload }) => ({
             ...state,
+            ...payload,
             role: getCookie('role'),
-            loggedIn: true,
+        }),
+        [actions.signup]: (state, { payload }) => ({
+            ...state,
+            ...payload,
+            role: getCookie('role'),
         }),
         [actions.logout]: (state, { payload }) => ({ loggedIn: false }),
         [actions.get]: (state, { payload }) => ({

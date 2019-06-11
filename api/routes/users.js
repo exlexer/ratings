@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+const { get } = require('lodash/fp');
+
 const {
     getUsers,
     createUser,
@@ -12,6 +14,13 @@ const { setAuthToken } = require('../models/auth');
 const { hashPassword, checkPassword, getAuthToken } = require('../lib/auth');
 
 const authorize = require('../authorizeRequest');
+
+/**
+ * Get all user
+ */
+router.get('/authorize', authorize(['user', 'owner'], true), (req, res) => {
+    res.json({ loggedIn: !!req.user, role: get(['user', 'role'], req) });
+});
 
 /**
  * Get all user

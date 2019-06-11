@@ -7,7 +7,8 @@
         "start": "nodemon bin/www",
         "build": "webpack",
         "develop": "webpack --watch",
-        "test": "mocha --exit \"./spec/*.js\""
+        "test": "mocha --exit \"./spec/*.js\"",
+        "ui-test": "./node_modules/.bin/cypress open"
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
@@ -63,6 +64,7 @@
     },
     "devDependencies": {
         "babel-plugin-transform-regenerator": "^6.26.0",
+        "cypress": "^3.3.1",
         "webpack-cli": "^3.3.2"
     }
 }

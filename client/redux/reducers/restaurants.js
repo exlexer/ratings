@@ -7,6 +7,8 @@ const defaultState = {};
 const reducer = handleActions(
     {
         [actions.load]: (state, { payload }) => (payload.config ? [] : payload),
+        [actions.createRestaurant]: (state, { payload }) =>
+            payload.config ? [] : payload,
         [actions.update]: (state, { payload }) => {
             const newState = values(state);
 

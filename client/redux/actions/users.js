@@ -3,24 +3,36 @@ import api from '../../api';
 
 export default createActions({
     USERS: {
-        SIGNIN: async (username, password) => {
-            const { data } = await api.post('users/signin', {
-                username,
-                password,
-            });
-            return data;
-        },
-        SIGNUP: async (username, password) => {
-            await api.post('users', {
-                username,
-                password,
-            });
-            const { data } = await api.post('users/signin', {
-                username,
-                password,
-            });
-            return data;
-        },
+        AUTHORIZE: () => api.get('users/authorize').then(({ data }) => data),
+        SIGNIN: (username, password) =>
+            api
+                .post('users/signin', {
+                    username,
+                    password,
+                })
+                .then(({ data }) => ({ ...data, loggedIn: true }))
+                .catch(() => ({
+                    loggedIn: false,
+                    error: 'Failed, please try again',
+                })),
+        SIGNUP: (username, password) =>
+            api
+                .post('users', {
+                    username,
+                    password,
+                })
+                .then(() =>
+                    api.post('users/signin', {
+                        username,
+                        password,
+                    }),
+                )
+                .then(({ data }) => ({ ...data, loggedIn: true }))
+                .catch(() => ({
+                    loggedIn: false,
+                    error: 'Failed, please try again',
+                })),
+
         LOGOUT: async () => {
             const { data } = await api.get('users/logout');
             return {};

@@ -43,14 +43,16 @@ const Restaurant = props => {
             <ColumnContainer>
                 <div>Highest Rating</div>
                 <Review {...props.highestRating} />
-                {props.reviews.length > 1 && [
-                    <div key="label">Lowest Rating</div>,
-                    <Review key="review" {...props.lowestRating} />,
-                ]}
+                {!!props.reviews &&
+                    props.reviews.length > 1 && [
+                        <div key="label">Lowest Rating</div>,
+                        <Review key="review" {...props.lowestRating} />,
+                    ]}
             </ColumnContainer>
         );
 
     const _getRecentReviews = () =>
+        !!props.recent &&
         !!props.recent.length && (
             <ColumnContainer>
                 Most Recent Reviews
@@ -64,6 +66,7 @@ const Restaurant = props => {
         );
 
     const _getUnreplied = () =>
+        !!props.reviews &&
         !!props.reviews.length && (
             <ColumnContainer>
                 Unreplied Reviews
@@ -79,7 +82,7 @@ const Restaurant = props => {
     const _getZeroState = () => !hasData && props.zeroState;
 
     return (
-        <Container style={props.style}>
+        <Container style={props.style} className="restaurant">
             <SmallColumnContainer>
                 <Title>{props.title}</Title>
                 <Stars

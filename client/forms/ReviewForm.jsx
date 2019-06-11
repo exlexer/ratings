@@ -55,7 +55,7 @@ const ReviewForm = props => (
                     variant="info"
                     type="submit"
                     disabled={!isValid}
-                    style={{ marginRight: 10 }}
+                    className="mr-2"
                 >
                     Submit
                 </Button>

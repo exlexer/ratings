@@ -9,7 +9,7 @@ const { getUserByToken } = require('./models/users');
  * can be passed
  * @param {array} roles
  */
-module.exports = (roles = []) => (req, res, next) => {
+module.exports = (roles = [], passThrough) => (req, res, next) => {
     roles = [...roles, 'admin'];
 
     const token = req.cookies.access_token;
@@ -21,6 +21,8 @@ module.exports = (roles = []) => (req, res, next) => {
     getUserByToken(token).then(user => {
         if (includes(user.role, roles)) {
             req.user = pick(['id', 'username', 'role'], user);
+            next();
+        } else if (passThrough) {
             next();
         } else {
             res.sendStatus(401);

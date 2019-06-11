@@ -11,7 +11,7 @@ const ReplyForm = props => (
     <Formik validationSchema={schema} onSubmit={props.onSubmit}>
         {({ handleSubmit, handleChange, values, touched, isValid, errors }) => (
             <Form noValidate onSubmit={handleSubmit}>
-                <Form.Group controlId="username">
+                <Form.Group controlId="comment">
                     <Form.Label>Comment</Form.Label>
                     <Form.Control
                         type="text"
@@ -35,7 +35,7 @@ const ReplyForm = props => (
                     variant="info"
                     type="submit"
                     disabled={!isValid}
-                    style={{ marginRight: 10 }}
+                    className="mr-2"
                 >
                     Submit
                 </Button>
