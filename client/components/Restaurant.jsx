@@ -1,6 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Overlay, Popover } from 'react-bootstrap';
 import { map } from 'lodash/fp';
+import * as yup from 'yup';
 
 import Review from './Review';
 import Stars from './Stars';
@@ -11,8 +12,9 @@ import {
     ColumnContainer,
     Title,
     Link,
+    ReviewHeading,
 } from './StyledComponents';
-import ReviewForm from '../forms/ReviewForm';
+import Form from './Form';
 
 const Restaurant = props => {
     const [settingRating, setSettingRating] = useState();
@@ -41,11 +43,13 @@ const Restaurant = props => {
     const _getReviewRange = () =>
         props.highestRating && (
             <ColumnContainer>
-                <div>Highest Rating</div>
+                <ReviewHeading>Highest Rating</ReviewHeading>
                 <Review {...props.highestRating} />
                 {!!props.reviews &&
                     props.reviews.length > 1 && [
-                        <div key="label">Lowest Rating</div>,
+                        <ReviewHeading key="label">
+                            Lowest Rating
+                        </ReviewHeading>,
                         <Review key="review" {...props.lowestRating} />,
                     ]}
             </ColumnContainer>
@@ -55,7 +59,7 @@ const Restaurant = props => {
         !!props.recent &&
         !!props.recent.length && (
             <ColumnContainer>
-                Most Recent Reviews
+                <ReviewHeading>Most Recent Reviews</ReviewHeading>
                 {map(
                     r => (
                         <Review key={r.id} {...r} />
@@ -69,7 +73,7 @@ const Restaurant = props => {
         !!props.reviews &&
         !!props.reviews.length && (
             <ColumnContainer>
-                Unreplied Reviews
+                <ReviewHeading>Unreplied Reviews</ReviewHeading>
                 {map(
                     r => (
                         <Review key={r.id} {...r} onReply={props.onReply} />
@@ -80,6 +84,23 @@ const Restaurant = props => {
         );
 
     const _getZeroState = () => !hasData && props.zeroState;
+
+    const fields = [
+        {
+            key: 'comment',
+            label: 'Comment',
+            as: 'textarea',
+            props: {
+                rows: '3',
+            },
+            validations: yup.string().required('Comment is required.'),
+        },
+        {
+            type: 'date',
+            key: 'date',
+            validations: yup.date().required('Date is required.'),
+        },
+    ];
 
     return (
         <Container style={props.style} className="restaurant">
@@ -102,9 +123,11 @@ const Restaurant = props => {
                     containerPadding={20}
                 >
                     <Popover id="popover-contained" title="Leave a review">
-                        <ReviewForm
+                        <Form
+                            fields={fields}
                             onSubmit={_handleSubmit}
-                            onCancel={() => setSettingRating()}
+                            actionText="cancel"
+                            onClickAction={() => setSettingRating()}
                         />
                     </Popover>
                 </Overlay>

@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { Navbar, Button, Overlay, Popover } from 'react-bootstrap';
-import RestaurantForm from '../forms/RestaurantForm';
+import Form from '../components/Form';
 
+import * as yup from 'yup';
+import api from '../api';
 import userActions from '../redux/actions/users';
 import restaurantActions from '../redux/actions/restaurants';
 
@@ -14,6 +16,24 @@ const MainHeader = ({ logout, createRestaurant, role }) => {
         createRestaurant(name);
         setShow(false);
     };
+
+    const fields = [
+        {
+            key: 'name',
+            label: 'Name',
+            validations: yup
+                .string()
+                .required('Names is required.')
+                .test(
+                    'isUsed',
+                    'This restaurant name is already taken.',
+                    value =>
+                        api
+                            .get(`restaurants/duplicate/${value}`)
+                            .then(({ data }) => !data.exists),
+                ),
+        },
+    ];
 
     return (
         <Navbar bg="dark" variant="dark">
@@ -38,9 +58,11 @@ const MainHeader = ({ logout, createRestaurant, role }) => {
                             id="popover-contained"
                             title="Add a Restaurant"
                         >
-                            <RestaurantForm
+                            <Form
+                                fields={fields}
                                 onSubmit={_handleSubmit}
-                                onCancel={() => setShow(false)}
+                                actionText={'cancel'}
+                                onClickAction={() => setShow(false)}
                             />
                         </Popover>
                     </Overlay>

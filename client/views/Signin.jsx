@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import actions from '../redux/actions/users';
-
+import * as yup from 'yup';
+import api from '../api';
 import { Alert, Container, Row, Col, Card } from 'react-bootstrap';
-import SigninForm from '../forms/SigninForm';
+import Form from '../components/Form';
 
 const Signin = props => {
     const [signingUp, setSigningUp] = useState();
@@ -13,6 +14,47 @@ const Signin = props => {
 
     const _handleSignup = ({ username, password }) =>
         props.signup(username, password);
+
+    const signinFields = [
+        {
+            key: 'username',
+            label: 'Username',
+            validations: yup.string().required('Username is required.'),
+        },
+        {
+            key: 'password',
+            label: 'Password',
+            type: 'password',
+            validations: yup
+                .string()
+                .required('Password is required.')
+                .min(6, 'Password must be at least 6 characters.'),
+        },
+    ];
+
+    const signupFields = [
+        {
+            key: 'username',
+            label: 'Username',
+            validations: yup
+                .string()
+                .required('Username is required.')
+                .test('isUsed', 'This username is already taken.', value =>
+                    api
+                        .get(`users/duplicate/${value}`)
+                        .then(({ data }) => !data.exists),
+                ),
+        },
+        {
+            key: 'password',
+            label: 'Password',
+            type: 'password',
+            validations: yup
+                .string()
+                .required('Password is required.')
+                .min(6, 'Password must be at least 6 characters.'),
+        },
+    ];
 
     return (
         <Container>
@@ -27,13 +69,23 @@ const Signin = props => {
                             {props.error && (
                                 <Alert variant="danger">{props.error}</Alert>
                             )}
-                            <SigninForm
-                                onSubmit={
-                                    signingUp ? _handleSignup : _handleSignin
-                                }
-                                toggleText={signingUp ? 'Signin' : 'Signup'}
-                                onToggle={() => setSigningUp(!signingUp)}
-                            />
+                            {signingUp ? (
+                                <Form
+                                    key="signin"
+                                    fields={signupFields}
+                                    onSubmit={_handleSignup}
+                                    actionText={'I Already have an account'}
+                                    onClickAction={() => setSigningUp(false)}
+                                />
+                            ) : (
+                                <Form
+                                    key="signup"
+                                    fields={signinFields}
+                                    onSubmit={_handleSignin}
+                                    actionText={'New here? Signup'}
+                                    onClickAction={() => setSigningUp(true)}
+                                />
+                            )}
                         </Card.Body>
                     </Card>
                 </Col>

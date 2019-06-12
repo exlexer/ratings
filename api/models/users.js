@@ -5,14 +5,28 @@ const forEachWithKeys = forEach.convert({ cap: false });
 const FIELDS = ['username', 'role'];
 
 module.exports = {
-    getUsers,
+    checkUsername,
     createUser,
-    getUserByUsername,
-    getUserByToken,
-    getOwnerByRestaurant,
     deleteUser,
+    getUserByRestaurant,
+    getUsers,
+    getUserByToken,
+    getUserByUsername,
     updateUser,
 };
+
+function checkUsername(username) {
+    return db
+        .query(
+            `
+        select true as exists
+        from users
+        where username = $1
+    `,
+            [username],
+        )
+        .then(data => !!data.exists);
+}
 
 function getUsers() {
     return db.query(
@@ -62,7 +76,7 @@ function getUserByToken(token) {
     );
 }
 
-function getOwnerByRestaurant(restaurant) {
+function getUserByRestaurant(restaurant) {
     return db.query(
         `
         select *

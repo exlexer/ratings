@@ -13,10 +13,16 @@ import SignIn from './views/SignIn';
 import Restaurants from './views/Restaurants';
 import Admin from './views/Admin';
 
+import { isUndefined } from 'lodash/fp';
+
 const App = ({ loggedIn, role, authorize }) => {
     useEffect(() => {
         authorize();
     }, [role]);
+
+    if (isUndefined(loggedIn)) {
+        return null;
+    }
 
     if (!loggedIn) {
         return <SignIn />;

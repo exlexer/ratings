@@ -1,4 +1,4 @@
-import style from 'styled-components';
+import style, { css } from 'styled-components';
 
 export const Container = style.div`
     width: 100%;
@@ -10,6 +10,14 @@ export const BlockQuote = style.div`
     background: var(--light);
     border-left: 4px solid var(--info);
     padding: 8px 16px;
+`;
+
+export const ReviewHeading = style.div`
+    padding: 8px;
+`;
+
+export const ReplyContainer = style.div`
+    padding-left: 10px;
 `;
 
 export const SmallColumnContainer = style.div`
@@ -62,4 +70,12 @@ export const Link = style.button`
 export const Rating = style.div`
     color: var(--secondary);
     width: fit-content;
+
+    &:hover {
+        ${props =>
+            props.clickable &&
+            css`
+                cursor: pointer;
+            `}
+    }
 `;

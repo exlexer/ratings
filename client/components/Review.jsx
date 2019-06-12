@@ -2,9 +2,17 @@ import React, { useRef, useState } from 'react';
 import { Overlay, Popover } from 'react-bootstrap';
 import { MdReply } from 'react-icons/md';
 import { isFunction } from 'lodash/fp';
-import ReplyForm from '../forms/ReplyForm';
+import Form from './Form';
+import * as yup from 'yup';
 
-import { Header, User, Comment, Link, BlockQuote } from './StyledComponents';
+import {
+    BlockQuote,
+    Comment,
+    Header,
+    Link,
+    ReplyContainer,
+    User,
+} from './StyledComponents';
 import Stars from './Stars';
 
 const Review = ({
@@ -24,17 +32,28 @@ const Review = ({
         setReplying(false);
     };
 
+    const fields = [
+        {
+            key: 'comment',
+            validations: yup.string().required(),
+            as: 'textarea',
+            props: {
+                rows: '3',
+            },
+        },
+    ];
+
     return (
         <BlockQuote>
             <Header>
                 <Stars rating={rate} />
                 {isFunction(onReply) && [
-                    <div key="button" ref={replyRef}>
+                    <ReplyContainer key="button" ref={replyRef}>
                         <Link onClick={() => setReplying(!replying)}>
                             Reply
                             <MdReply />
                         </Link>
-                    </div>,
+                    </ReplyContainer>,
                     <Overlay
                         key="popover"
                         show={!!replying}
@@ -43,9 +62,11 @@ const Review = ({
                         container={replyRef.current}
                     >
                         <Popover id="popover-contained" title="Reply">
-                            <ReplyForm
+                            <Form
                                 onSubmit={_handleSubmit}
-                                onCancel={() => setReplying(false)}
+                                fields={fields}
+                                actionText="Cancel"
+                                onActionClick={() => setReplying(false)}
                             />
                         </Popover>
                     </Overlay>,

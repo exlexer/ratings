@@ -4,10 +4,11 @@ const router = express.Router();
 const { get } = require('lodash/fp');
 
 const {
-    getUsers,
+    checkUsername,
     createUser,
-    getUserByUsername,
     deleteUser,
+    getUsers,
+    getUserByUsername,
     updateUser,
 } = require('../models/users');
 const { setAuthToken } = require('../models/auth');
@@ -28,6 +29,17 @@ router.get('/authorize', authorize(['user', 'owner'], true), (req, res) => {
 router.get('', authorize(), (req, res, next) => {
     getUsers()
         .then(data => res.json(data))
+        .catch(next);
+});
+
+/**
+ * Checks if a username is already taken
+ */
+router.get('/duplicate/:username', (req, res, next) => {
+    const { username } = req.params;
+
+    checkUsername(username)
+        .then(exists => res.json({ exists }))
         .catch(next);
 });
 

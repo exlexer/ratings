@@ -5,12 +5,26 @@ const forEachWithKeys = forEach.convert({ cap: false });
 const FIELDS = ['name'];
 
 module.exports = {
+    checkRestaurantName,
     createRestaurant,
+    deleteRestaurant,
     getRestaurants,
     getRestaurantsByOwner,
-    deleteRestaurant,
     updateRestaurant,
 };
+
+function checkRestaurantName(name) {
+    return db
+        .query(
+            `
+                select true as exists
+                from restaurants
+                where name = $1
+            `,
+            [name],
+        )
+        .then(data => !!data.exists);
+}
 
 function createRestaurant(name, owner) {
     return db.query(
@@ -31,7 +45,7 @@ function getRestaurants(sortBy, sortOrder) {
             (
                 select CASE
                 WHEN avg(rate) is not NULL
-                then avg(rate)::integer
+                then avg(rate)::numeric
                 else 0
                 end
                 from reviews
@@ -51,7 +65,7 @@ function getRestaurantsByOwner(sortBy, sortOrder, owner) {
             (
                 select CASE
                 WHEN avg(rate) is not NULL
-                then avg(rate)::integer
+                then avg(rate)::numeric
                 else 0
                 end
                 from reviews

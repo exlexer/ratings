@@ -7,8 +7,7 @@
         "start": "nodemon bin/www",
         "build": "webpack",
         "develop": "webpack --watch",
-        "test": "mocha --exit \"./spec/*.js\"",
-        "ui-test": "./node_modules/.bin/cypress open"
+        "test": "mocha --exit \"./spec/*.js\""
     },
     "dependencies": {
         "@babel/core": "^7.4.5",
@@ -58,7 +57,6 @@
         "style-loader": "^0.23.1",
         "styled-components": "^4.3.0",
         "supertest": "^4.0.2",
-        "supertest-as-promised": "^4.0.2",
         "webpack": "^4.32.2",
         "yup": "^0.27.0"
     },

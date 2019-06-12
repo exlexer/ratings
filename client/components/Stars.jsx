@@ -80,7 +80,7 @@ const Stars = React.forwardRef(
         }
 
         return (
-            <Rating ref={ref} style={style}>
+            <Rating ref={ref} clickable={isFunction(onClick)} style={style}>
                 {stars}
                 {clear}
             </Rating>

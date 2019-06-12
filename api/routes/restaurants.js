@@ -4,10 +4,11 @@ const { isArray, toNumber, map, reduce } = require('lodash/fp');
 const mapWithKeys = map.convert({ cap: false });
 
 const {
+    checkRestaurantName,
     createRestaurant,
+    deleteRestaurant,
     getRestaurants,
     getRestaurantsByOwner,
-    deleteRestaurant,
     updateRestaurant,
 } = require('../models/restaurants');
 const {
@@ -17,7 +18,7 @@ const {
     createReview,
     replyToReview,
 } = require('../models/reviews');
-const { getOwnerByRestaurant } = require('../models/users');
+const { getUserByRestaurant } = require('../models/users');
 
 const authorize = require('../authorizeRequest');
 
@@ -75,6 +76,17 @@ router.get('', authorize(['user', 'owner']), (req, res, next) => {
                 ),
             ),
         )
+        .catch(next);
+});
+
+/**
+ * Checks if a username is already taken
+ */
+router.get('/duplicate/:name', (req, res, next) => {
+    const { name } = req.params;
+
+    checkRestaurantName(name)
+        .then(exists => res.json({ exists }))
         .catch(next);
 });
 
@@ -147,7 +159,7 @@ router.post(
         const { id, review } = req.params;
         const { comment } = req.body;
 
-        getOwnerByRestaurant(id)
+        getUserByRestaurant(id)
             .then(data => {
                 if (data.id === req.user.id) {
                     return replyToReview(review, comment);

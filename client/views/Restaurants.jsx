@@ -47,7 +47,7 @@ const Restaurants = props => {
     };
 
     return [
-        <Navbar bg="light">
+        <Navbar key="nav" bg="light">
             <Navbar.Brand>Sort Order</Navbar.Brand>
             <Nav className="mr-auto">
                 <Nav.Link onClick={_sort('rating')}>
@@ -64,7 +64,7 @@ const Restaurants = props => {
                 onClick={n => setStarFilter(n)}
             />
         </Navbar>,
-        <Container style={{ marginTop: 20 }}>
+        <Container key="container" style={{ marginTop: 20 }}>
             {map(r => {
                 const restaurantProps = {
                     key: r.id,
