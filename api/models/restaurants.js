@@ -2,7 +2,7 @@ const db = require('../lib/db');
 const { forEach, join, includes } = require('lodash/fp');
 const forEachWithKeys = forEach.convert({ cap: false });
 
-const FIELDS = ['name'];
+const FIELDS = ['name', 'owner'];
 
 module.exports = {
     checkRestaurantName,

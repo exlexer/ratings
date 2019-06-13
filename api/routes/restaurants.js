@@ -161,7 +161,7 @@ router.post(
 
         getUserByRestaurant(id)
             .then(data => {
-                if (data.id === req.user.id) {
+                if (data.id === req.user.id || req.user.role === 'admin') {
                     return replyToReview(review, comment);
                 } else {
                     res.sendStatus(401);
