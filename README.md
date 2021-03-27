@@ -2,7 +2,7 @@
 
 Simple application for rating restaurants
 
-URL: https://review-exlexer.herokuapp.com/
+URL: https://ratings-exlexer.herokuapp.com/
 
 ## Stack
 

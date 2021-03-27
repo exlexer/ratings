@@ -15,7 +15,6 @@ client.connect((err) => {
 export const query = (text: string, params?: any[]): Promise<any[] | QueryResult> =>
     new Promise((resolve, reject): void => {
         client.query(text, params, (error: Error, res: QueryResult) => {
-            console.log(error, res);
             if (error) return reject(error);
             if (res.command === 'DELETE' && res.rowCount < 1) reject(new Error('no rows deleted'));
             if (res.command === 'INSERT' && res.rowCount < 1) reject(new Error('no rows inserted'));
