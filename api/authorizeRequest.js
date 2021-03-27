@@ -15,6 +15,7 @@ module.exports = (roles = [], passThrough) => (req, res, next) => {
     console.log(1);
     const token = req.cookies.access_token;
 
+    console.log(token, passThrough);
     if (!token && !passThrough) {
         return res.sendStatus(401);
     }
