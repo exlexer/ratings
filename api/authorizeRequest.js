@@ -12,19 +12,25 @@ const { getUserByToken } = require('./models/users');
 module.exports = (roles = [], passThrough) => (req, res, next) => {
     roles = [...roles, 'admin'];
 
+    console.log(1);
     const token = req.cookies.access_token;
 
     if (!token && !passThrough) {
         return res.sendStatus(401);
     }
 
-    getUserByToken(token).then(user => {
+    console.log(2);
+    getUserByToken(token).then((user) => {
+        console.log(3);
         if (includes(user.role, roles)) {
+            console.log(4);
             req.user = pick(['id', 'username', 'role'], user);
             next();
         } else if (passThrough) {
+            console.log(5);
             next();
         } else {
+            console.log(6);
             res.sendStatus(401);
         }
     });
