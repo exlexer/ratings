@@ -3,14 +3,7 @@ const router = express.Router();
 
 const { get } = require('lodash/fp');
 
-const {
-    checkUsername,
-    createUser,
-    deleteUser,
-    getUsers,
-    getUserByUsername,
-    updateUser,
-} = require('../models/users');
+const { checkUsername, createUser, deleteUser, getUsers, getUserByUsername, updateUser } = require('../models/users');
 const { setAuthToken } = require('../models/auth');
 const { hashPassword, checkPassword, getAuthToken } = require('../lib/auth');
 
@@ -28,7 +21,7 @@ router.get('/authorize', authorize(['user', 'owner'], true), (req, res) => {
  */
 router.get('', authorize(), (req, res, next) => {
     getUsers()
-        .then(data => res.json(data))
+        .then((data) => res.json(data))
         .catch(next);
 });
 
@@ -39,7 +32,7 @@ router.get('/duplicate/:username', (req, res, next) => {
     const { username } = req.params;
 
     checkUsername(username)
-        .then(exists => res.json({ exists }))
+        .then((exists) => res.json({ exists }))
         .catch(next);
 });
 
@@ -57,7 +50,7 @@ router.post('', (req, res, next) => {
     let token;
 
     createUser(username, hashed, salt, 'user')
-        .then(data => {
+        .then((data) => {
             token = getAuthToken(username);
             return setAuthToken(token, data.id);
         })
